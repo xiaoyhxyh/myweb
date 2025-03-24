@@ -1,79 +1,112 @@
-<!DOCTYPE HTML>
-<html>
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>测试</title>
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-            .header-container {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 20px 5%; 
-            }
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>完美居中解决方案</title>
+    <style>
+        /* 全局重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-            .index1photo img {
-                width: 300px;
-                height: 200px;
-                max-width: 100%; 
+        /* 主容器 */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 头部布局 */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            flex-wrap: wrap;
+        }
+
+        .index1photo img {
+            max-width: min(100%, 300px);
+            height: auto;
+        }
+
+        /* 按钮组 */
+        .button-group {
+            display: flex;
+            gap: 100px;
+        }
+
+        /* 核心改进：主内容区 */
+        .center-photo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5em; /* 新增：元素间距统一控制 */
+        }
+
+        .center-photo img {
+            width: min(100%, 500px);
+            margin-bottom: 0; /* 清除图片底部默认间距 */
+        }
+
+        .center-photo h2 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin-top: 1.5rem;
+            max-width: 80ch; /* 文字最佳阅读宽度 */
+            line-height: 1.6;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 30px;
             }
 
             .button-group {
-                display: flex;
-                gap: 500px;
-            }
-
-            .lstext {
-                padding: 10px 20px;
-                border-radius: 100px;
-                white-space: nowrap;
+                order: -1;
+                width: 100%;
+                justify-content: center;
             }
 
             .center-photo {
-                text-align: center;
-                padding: 20px 5%;
+                padding: 1rem;
             }
 
+            .center-photo h2 {
+                max-width: 95%;
+            }
+        }
+
+        /* 超小屏优化 */
+        @media (max-width: 480px) {
+            .center-photo {
+                grid-template-rows: auto 1fr; /* 分离图片和文字 */
+            }
+            
             .center-photo img {
                 width: 100%;
-                max-width: 500px;
-                height: auto; 
             }
-
-            @media (max-width: 668px) {
-                .header-container {
-                    flex-direction: column; 
-                    gap: 15px;
-                }
-
-                .button-group {
-                    justify-content: center;
-                    width: 100%;
-                }
-
-                .center-photo h2 {
-                    font-size: 1.5rem; 
-                }
-            }
-        </style>
-    </head>
-        <div class="header-container">
-            <div class="index1photo">
-                <img src="index1.jpg" alt="主图">
-            </div>
-            <div class="button-group">
-                <button class="lstext">a</button>
-                <button class="lstext">b</button>
-            </div>
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="index1photo">
+            <img src="index1.jpg" alt="品牌展示">
         </div>
-
-        <div class="center-photo">
-            <img src="index2.jpg" alt="副图">
-            <h2>世界因你而变</h2>
+        <div class="button-group">
+            <button class="lstext">功能A</button>
+            <button class="lstext">功能B</button>
         </div>
-    </body>
+    </div>
+
+    <!-- 核心内容区 -->
+    <div class="center-photo">
+        <img src="index2.jpg" alt="核心视觉">
+        <h2>世界因你而变</h2>
+    </div>
+</body>
 </html>
