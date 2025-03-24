@@ -87,16 +87,114 @@
             }
         }
 
-        /* 超小屏优化 */
-        @media (max-width: 480px) {
-            .center-photo {
-                grid-template-rows: auto 1fr; /* 分离图片和文字 */
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="index1photo">
+            <img src="index1.jpg" alt="品牌展示">
+        </div>
+        <div class="button-group">
+            <button>功能A</button>
+            <button>功能B</button>
+        </div>
+    </div>
+
+    <!-- 核心内容区 -->
+    <div class="center-photo">
+        <img src="index2.jpg" alt="核心视觉">
+        <h2>世界因你而变</h2>
+    </div>
+</body>
+</html><!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>xiaoyh</title>
+    <style>
+        /* 全局重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 主容器 */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 头部布局 */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            flex-wrap: wrap;
+        }
+
+        .index1photo img {
+            max-width: min(100%, 350px);
+            height: auto;
+            z-index: 999;
+        }
+
+        /* 按钮组 */
+        .button-group {
+            display: flex;
+            gap: 150px;
+        }
+
+        /* 核心改进：主内容区 */
+        .center-photo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5em; /* 新增：元素间距统一控制 */
+        }
+
+        .center-photo img {
+            width: min(100%, 500px);
+            margin-bottom: 0; /* 清除图片底部默认间距 */
+        }
+
+        .center-photo h2 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin-top: 1.5rem;
+            max-width: 80ch; /* 文字最佳阅读宽度 */
+            line-height: 1.6;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 30px;
             }
-            
-            .center-photo img {
+
+            .button-group {
+                order: -1;
                 width: 100%;
+                justify-content: center;
+            }
+
+            .center-photo {
+                padding: 1rem;
+                max-width: min(50%, 400px);
+                text-align: center;
+            }
+
+            .center-photo h2 {
+                max-width: 95%;
+            }
+            .index1photo img {
+                max-width: min(50%, 200px);
+                height: auto;
             }
         }
+
     </style>
 </head>
 <body>
