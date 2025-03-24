@@ -79,39 +79,79 @@
 </html><!DOCTYPE HTML>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>测试</title>
         <style>
-            .center-photo{
-                text-align:center;
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
             }
-            .right-text{
-                text-align:right;
-                display:inline-block;
-                padding-left:250px;
+            .header-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px 5%; 
             }
-            .lstext{
-                padding:10px;
-                border-radius:4px;
-                margin-left:250px;
+
+            .index1photo img {
+                width: 300px;
+                height: 200px;
+                max-width: 100%; 
             }
-            .index1photo{
-                text-align:left;
-                display:inline-block;
-                vertical-align:middle;
+
+            .button-group {
+                display: flex;
+                gap: 500px;
+            }
+
+            .lstext {
+                padding: 10px 20px;
+                border-radius: 100px;
+                white-space: nowrap;
+            }
+
+            .center-photo {
+                text-align: center;
+                padding: 20px 5%;
+            }
+
+            .center-photo img {
+                width: 100%;
+                max-width: 500px;
+                height: auto; 
+            }
+
+            @media (max-width: 668px) {
+                .header-container {
+                    flex-direction: column; 
+                    gap: 15px;
+                }
+
+                .button-group {
+                    justify-content: center;
+                    width: 100%;
+                }
+
+                .center-photo h2 {
+                    font-size: 1.5rem; 
+                }
             }
         </style>
     </head>
-    <body>
-        <div class="index1photo"><img src="index1.jpg" alt="" width="300" height="200"></body></div>
-        <div class="right-text">
-            <div class="lstext">
+        <div class="header-container">
+            <div class="index1photo">
+                <img src="index1.jpg" alt="主图">
+            </div>
+            <div class="button-group">
                 <button class="lstext">a</button>
                 <button class="lstext">b</button>
             </div>
         </div>
+
         <div class="center-photo">
-            <img src="index2.jpg" alt="" width="250" height="125">
-            <h2 text-align:left;>世界因你而变</h2>
+            <img src="index2.jpg" alt="副图">
+            <h2>世界因你而变</h2>
         </div>
     </body>
 </html>
