@@ -16,6 +16,9 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            background-image: url(index3.jpg);
+            background-size: cover;
+            background-position: center;
         }
 
         .header-container {
@@ -45,17 +48,6 @@
             gap: 0.5em;
         }
 
-        .center-photo img {
-            width: min(100%, 500px);
-            margin-bottom: 0;
-        }
-
-        .center-photo h2 {
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
-            margin-top: 1.5rem;
-            max-width: 80ch;
-            line-height: 1.6;
-        }
 
         @media (max-width: 768px) {
             .header-container {
@@ -69,15 +61,6 @@
                 justify-content: center;
             }
 
-            .center-photo {
-                padding: 1rem;
-                max-width: min(50%, 400px);
-                text-align: center;
-            }
-
-            .center-photo h2 {
-                max-width: 95%;
-            }
             .index1photo img {
                 max-width: min(50%, 150px);
                 height: auto;
@@ -103,11 +86,13 @@
             <button style="background-color:white;border-radius:10px;padding:10px"><a href="about.html"><p style="color:black;text-decoration: underline;">关于我们</p></a></button>
         </div>
     </div>
-
-    <div class="center-photo">
-        <img src="index2.jpg" alt="">
-        <h2>世界因你而变</h2>
+    <div style="color:black;padding-left:100px;">
+        <i><h3><img src="index2.jpg" style="max-width:min(50%, 100px)">  建立于2025/3/25</h3></i>
+        <h1>我是康艳琴</h1>
+        <h1>我是李天难</h1>
     </div>
+    
+    
 </body>
 </html>
 
