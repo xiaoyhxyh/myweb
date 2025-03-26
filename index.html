@@ -72,21 +72,29 @@
                 color:aqua;
             }
         }
-
+        .rounded-box {
+            max-width: min(100%, 1900px);
+            padding: 20px;
+            border-radius: 10px;     /* 圆角半径 */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* 阴影：X偏移 Y偏移 模糊半径 颜色 */
+            background: linear-gradient(135deg, #ffffff, #eeecec); /* 渐变背景 */
+            margin: 20px;
+    }
     </style>
 </head>
 <body>
-    <div class="header-container">
-        <div class="index1photo">
-            <img src="index1.jpg" alt="" width="225px" >
-        </div>
-        <div class="button-group" style="color: aqua;">
-            <button style="background-color:white;border-radius:10px;padding:10px"><p style="color:black;text-decoration: underline;">主页</p></button>
-            <button style="background-color:white;border-radius:10px;padding:10px"><a href="lxwm.html"><p style="color:black;text-decoration: underline;">联系我们</p></a></button>
-            <button style="background-color:white;border-radius:10px;padding:10px"><a href="about.html"><p style="color:black;text-decoration: underline;">关于我们</p></a></button>
+    <div class="rounded-box">
+        <div class="header-container">
+            <div class="index1photo">
+                <img src="index1.jpg" alt="" width="225px" >
+            </div>
+            <div class="button-group" style="color: aqua;">
+                <button style="background-color:white;border-radius:10px;padding:10px"><p style="color:black;text-decoration: underline;">主页</p></button>
+                <button style="background-color:white;border-radius:10px;padding:10px"><a href="lxwm.html"><p style="color:black;text-decoration: underline;">联系我们</p></a></button>
+                <button style="background-color:white;border-radius:10px;padding:10px"><a href="about.html"><p style="color:black;text-decoration: underline;">关于我们</p></a></button>
+            </div>
         </div>
     </div>
-
     <div style="color:black;padding-left:100px;">
         <i><h3><img src="index2.jpg" style="max-width:min(50%, 100px)">  建立于2025/3/25</h3></i>
         <h1>发信息↓</h1>
