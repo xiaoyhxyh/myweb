@@ -29,9 +29,9 @@
             flex-wrap: wrap;
         }
 
-        .index1photo img {
-            max-width: min(70%, 350x);
-            height: auto;
+        .index1photo{
+            max-width: min(70%, 350px);
+            max-height: min(70%, 350px);
             z-index: 999;
         }
 
@@ -78,7 +78,7 @@
 <body>
     <div class="header-container">
         <div class="index1photo">
-            <img src="index1.jpg" alt="">
+            <img src="index1.jpg" alt="" width="225px" >
         </div>
         <div class="button-group" style="color: aqua;">
             <button style="background-color:white;border-radius:10px;padding:10px"><p style="color:black;text-decoration: underline;">主页</p></button>
@@ -86,14 +86,17 @@
             <button style="background-color:white;border-radius:10px;padding:10px"><a href="about.html"><p style="color:black;text-decoration: underline;">关于我们</p></a></button>
         </div>
     </div>
+
     <div style="color:black;padding-left:100px;">
         <i><h3><img src="index2.jpg" style="max-width:min(50%, 100px)">  建立于2025/3/25</h3></i>
         <h1>发信息↓</h1>
     </div>
+
     <div class="input-group" style="padding-left:100px">
         <input type="text" id="inputContent" placeholder="输入内容...">
-        <button onclick="sendContent()">发送</button>
+        <button style="border-radius:5px;background-color: aqua;" onclick="sendContent()">发送</button>
     </div>
+
     <div id="response"></div>
 
     <script>
