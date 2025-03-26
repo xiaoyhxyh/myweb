@@ -29,9 +29,9 @@
             flex-wrap: wrap;
         }
 
-        .index1photo img {
-            max-width: min(100%, 350px);
-            height: auto;
+        .index1photo{
+            max-width: min(70%, 350px);
+            max-height: min(70%, 350px);
             z-index: 999;
         }
 
@@ -48,6 +48,7 @@
             gap: 0.5em;
         }
 
+
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -61,7 +62,7 @@
             }
 
             .index1photo img {
-                max-width: min(50%, 150px);
+                max-width: min(50%, 100px);
                 height: auto;
             }
             .button-group {
@@ -71,20 +72,211 @@
                 color:aqua;
             }
         }
+        .rounded-box {
+            max-width: min(100%, 1900px);
+            padding: 20px;
+            border-radius: 10px;     /* 圆角半径 */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* 阴影：X偏移 Y偏移 模糊半径 颜色 */
+            background: linear-gradient(135deg, #ffffff, #eeecec); /* 渐变背景 */
+            margin: 20px;
+    }
+        button {
+            font-family: inherit;
+            font-size: 18px;
+            background: linear-gradient(to bottom, #4dc7d9 0%,#66a6ff 100%);
+            color: white;
+            padding: 0.8em 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 25px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: scale(0.95);
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        button span {
+            display: block;
+            margin-left: 0.4em;
+            transition: all 0.3s;
+        }
+
+        button svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+            transition: all 0.3s;
+        }
+
+        button .svg-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin-right: 0.5em;
+            transition: all 0.3s;
+        }
+
+        button:hover .svg-wrapper {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        button:hover svg {
+            transform: rotate(45deg);
+        }
+                /* From Uiverse.io by zanina-yassine */ 
+        .container {
+            width: 250px;
+            height: 250px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cloud {
+            width: 250px;
+        }
+
+        .front {
+            padding-top: 45px;
+            margin-left: 25px;
+            display: inline;
+            position: absolute;
+            z-index: 11;
+            animation: clouds 8s infinite;
+            animation-timing-function: ease-in-out;
+        }
+
+        .back {
+            margin-top: -30px;
+            margin-left: 150px;
+            z-index: 12;
+            animation: clouds 12s infinite;
+            animation-timing-function: ease-in-out;
+        }
+
+        .right-front {
+            width: 45px;
+            height: 45px;
+            border-radius: 50% 50% 50% 0%;
+            background-color: #4c9beb;
+            display: inline-block;
+            margin-left: -25px;
+            z-index: 5;
+        }
+
+        .left-front {
+            width: 65px;
+            height: 65px;
+            border-radius: 50% 50% 0% 50%;
+            background-color: #4c9beb;
+            display: inline-block;
+            z-index: 5;
+        }
+
+        .right-back {
+            width: 50px;
+            height: 50px;
+            border-radius: 50% 50% 50% 0%;
+            background-color: #4c9beb;
+            display: inline-block;
+            margin-left: -20px;
+            z-index: 5;
+        }
+
+        .left-back {
+            width: 30px;
+            height: 30px;
+            border-radius: 50% 50% 0% 50%;
+            background-color: #4c9beb;
+            display: inline-block;
+            z-index: 5;
+        }
+
+        .sun {
+            width: 120px;
+            height: 120px;
+            background: -webkit-linear-gradient(to right, #fcbb04, #fffc00);
+            background: linear-gradient(to right, #fcbb04, #fffc00);
+            border-radius: 60px;
+            display: inline;
+            position: absolute;
+        }
+
+        .sunshine {
+            animation: sunshines 2s infinite;
+        }
+
+        @keyframes sunshines {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(1.4);
+                opacity: 0;
+            }
+        }
+
+        @keyframes clouds {
+            0% {
+                transform: translateX(15px);
+            }
+
+            50% {
+                transform: translateX(0px);
+            }
+
+            100% {
+                transform: translateX(15px);
+            }
+        }
 
     </style>
 </head>
 <body>
-    <div class="header-container">
-        <div class="index1photo">
-            <img src="index1.jpg" alt="">
-        </div>
-        <div class="button-group" style="color: aqua;">
-            <button style="background-color:white;border-radius:10px;padding:10px"><a href="index.html"><p style="color:black;text-decoration: underline;">主页</p></a></button>
-            <button style="background-color:white;border-radius:10px;padding:10px"><a href="lxwm.html"><p style="color:black;text-decoration: underline;">联系我们</p></a></button>
-            <button style="background-color:white;border-radius:10px;padding:10px"><a href="about.html"><p style="color:black;text-decoration: underline;">关于我们</p></a></button>
+    <div class="rounded-box">
+        <div class="header-container">
+            <div class="index1photo">
+                <img src="index1.jpg" alt="" width="225px" >
+            </div>
+            <div class="button-group" style="color: aqua;">
+                <button><a href="index.html"><p style="color:black;">主页</p></a></button>
+                <button><a href="lxwm.html"><p style="color:black;">联系我们</p></a></button>
+                <button><a href="about.html"><p style="color:black;">关于我们</p></a></button>
+            </div>
         </div>
     </div>
+    <!-- From Uiverse.io by zanina-yassine --> 
+<div class="container" style="padding-left:min(100%,1500px);">
+    <div class="cloud front">
+      <span class="left-front"></span>
+      <span class="right-front"></span>
+    </div>
+    <span class="sun sunshine"></span>
+    <span class="sun"></span>
+    <div class="cloud back">
+      <span class="left-back"></span>
+      <span class="right-back"></span>
+    </div>
+  </div>
+
+
 
 </body>
 </html>
