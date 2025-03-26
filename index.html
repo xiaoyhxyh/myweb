@@ -91,8 +91,42 @@
         <h1>康艳琴看到没a</h1>
         <h1>我是李天难</h1>
     </div>
-    
-    
+    <div class="input-group">
+        <input type="text" id="inputContent" placeholder="输入内容...">
+        <button onclick="sendContent()">发送</button>
+    </div>
+    <div id="response"></div>
+
+    <script>
+        async function sendContent() {
+            const input = document.getElementById("inputContent");
+            const responseDiv = document.getElementById("response");
+            const content = input.value.trim();
+
+            if (!content) {
+                alert("请输入内容！");
+                return;
+            }
+
+            try {
+                const url = "https://780a-120-229-11-71.ngrok-free.app/submit"; // 替换为你的 ngrok URL
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "ngrok-skip-browser-warning": "1" // 跳过 ngrok 警告
+                    },
+                    body: JSON.stringify({ content: content })
+                });
+
+                const data = await response.json();
+                responseDiv.innerHTML = `服务端响应：${data.message}`;
+                input.value = ""; // 清空输入框
+            } catch (error) {
+                responseDiv.innerHTML = `请求失败：${error.message}`;
+            }
+        }
+    </script>
 </body>
 </html>
 
