@@ -108,19 +108,19 @@
             }
 
             try {
-                const url = "https://780a-120-229-11-71.ngrok-free.app/submit"; // 替换为你的 ngrok URL
+                const url = "https://780a-120-229-11-71.ngrok-free.app/submit";
                 const response = await fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "ngrok-skip-browser-warning": "1" // 跳过 ngrok 警告
+                        "ngrok-skip-browser-warning": "1"
                     },
                     body: JSON.stringify({ content: content })
                 });
 
                 const data = await response.json();
                 responseDiv.innerHTML = `服务端响应：${data.message}`;
-                input.value = ""; // 清空输入框
+                input.value = "";
             } catch (error) {
                 responseDiv.innerHTML = `请求失败：${error.message}`;
             }
