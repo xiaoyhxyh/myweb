@@ -331,7 +331,32 @@
     </div>
 
     <div id="response"></div>
-
+    <div id="message">累计信息：</div>
+    <script>
+        const url = "https://3e83-120-229-11-71.ngrok-free.app/get";
+        const messageDiv = document.getElementById("message");
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+                "ngrok-skip-browser-warning": "1" // 跳过 ngrok 的浏览器警告
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // 解析 JSON 响应
+        })
+        .then(data => {
+            console.log("Response data:", data); // 处理响应数据
+            messageDiv.innerHTML = data.message;
+            // 在这里可以将数据渲染到页面上
+        })
+        .catch(error => {
+            console.error("Fetch error:", error); // 捕获并处理错误
+        });
+    </script>
     <script>
         async function sendContent() {
             const input = document.getElementById("inputContent");
@@ -362,7 +387,7 @@
             }
         }
     </script>
-    <!-- From Uiverse.io by zanina-yassine --> 
+
     <div class="container" style="padding-left:min(100%,1500px);">
         <div class="cloud front">
             <span class="left-front"></span>
