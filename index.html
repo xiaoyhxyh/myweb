@@ -183,114 +183,124 @@
             width: 50%;
         }
         .container {
-        width: 250px;
-        height: 250px;
-        padding: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+            width: 250px;
+            height: 250px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .cloud {
-        width: 250px;
+            width: 250px;
         }
 
         .front {
-        padding-top: 45px;
-        margin-left: 25px;
-        display: inline;
-        position: absolute;
-        z-index: 11;
-        animation: clouds 8s infinite;
-        animation-timing-function: ease-in-out;
+            padding-top: 45px;
+            margin-left: 25px;
+            display: inline;
+            position: absolute;
+            z-index: 11;
+            animation: clouds 8s infinite;
+            animation-timing-function: ease-in-out;
         }
 
         .back {
-        margin-top: -30px;
-        margin-left: 150px;
-        z-index: 12;
-        animation: clouds 12s infinite;
-        animation-timing-function: ease-in-out;
+            margin-top: -30px;
+            margin-left: 150px;
+            z-index: 12;
+            animation: clouds 12s infinite;
+            animation-timing-function: ease-in-out;
         }
 
         .right-front {
-        width: 45px;
-        height: 45px;
-        border-radius: 50% 50% 50% 0%;
-        background-color: #4c9beb;
-        display: inline-block;
-        margin-left: -25px;
-        z-index: 5;
+            width: 45px;
+            height: 45px;
+            border-radius: 50% 50% 50% 0%;
+            background-color: #4c9beb;
+            display: inline-block;
+            margin-left: -25px;
+            z-index: 5;
         }
 
         .left-front {
-        width: 65px;
-        height: 65px;
-        border-radius: 50% 50% 0% 50%;
-        background-color: #4c9beb;
-        display: inline-block;
-        z-index: 5;
+            width: 65px;
+            height: 65px;
+            border-radius: 50% 50% 0% 50%;
+            background-color: #4c9beb;
+            display: inline-block;
+            z-index: 5;
         }
 
         .right-back {
-        width: 50px;
-        height: 50px;
-        border-radius: 50% 50% 50% 0%;
-        background-color: #4c9beb;
-        display: inline-block;
-        margin-left: -20px;
-        z-index: 5;
+            width: 50px;
+            height: 50px;
+            border-radius: 50% 50% 50% 0%;
+            background-color: #4c9beb;
+            display: inline-block;
+            margin-left: -20px;
+            z-index: 5;
         }
 
         .left-back {
-        width: 30px;
-        height: 30px;
-        border-radius: 50% 50% 0% 50%;
-        background-color: #4c9beb;
-        display: inline-block;
-        z-index: 5;
+            width: 30px;
+            height: 30px;
+            border-radius: 50% 50% 0% 50%;
+            background-color: #4c9beb;
+            display: inline-block;
+            z-index: 5;
         }
 
         .sun {
-        width: 120px;
-        height: 120px;
-        background: -webkit-linear-gradient(to right, #fcbb04, #fffc00);
-        background: linear-gradient(to right, #fcbb04, #fffc00);
-        border-radius: 60px;
-        display: inline;
-        position: absolute;
+            width: 120px;
+            height: 120px;
+            background: -webkit-linear-gradient(to right, #fcbb04, #fffc00);
+            background: linear-gradient(to right, #fcbb04, #fffc00);
+            border-radius: 60px;
+            display: inline;
+            position: absolute;
         }
 
         .sunshine {
-        animation: sunshines 2s infinite;
+            animation: sunshines 2s infinite;
         }
 
         @keyframes sunshines {
-        0% {
-            transform: scale(1);
-            opacity: 0.6;
-        }
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
 
-        100% {
-            transform: scale(1.4);
-            opacity: 0;
-        }
+            100% {
+                transform: scale(1.4);
+                opacity: 0;
+            }
         }
 
         @keyframes clouds {
-        0% {
-            transform: translateX(15px);
-        }
+            0% {
+                transform: translateX(15px);
+            }
 
-        50% {
-            transform: translateX(0px);
-        }
+            50% {
+                transform: translateX(0px);
+            }
 
-        100% {
-            transform: translateX(15px);
+            100% {
+                transform: translateX(15px);
+            }
         }
+        .divcontainer {
+            /*border: 2px solid #000; /* 边框颜色和宽度 */
+            padding: 10px; /* 内边距 */
+            width: 350px; /* 宽度 */
+            background-color: #f9f9f9; /* 背景颜色 */
+            border-radius: 14px; /* 圆角边框（可选） */
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* 阴影效果（可选） */
+            font-family: "Microsoft YaHei", sans-serif;
+            font-size: 30px; /* 字体大小 */
+            color: #333; /* 文字颜色 */
         }
-
     </style>
 </head>
 <body>
@@ -331,7 +341,7 @@
     </div>
 
     <div id="response"></div>
-    <div id="message">累计信息：</div>
+    <div id="message" class="divcontainer">累计信息：</div>
     <script>
         const url = "https://2539-120-229-11-71.ngrok-free.app/get";
         const messageDiv = document.getElementById("message");
@@ -350,9 +360,18 @@
         })
         .then(data => {
             console.log("Response data:", data); // 处理响应数据
-            var a=data.message;
-            messageDiv.innerHTML = "历史信息:"+data.message;
-            // 在这里可以将数据渲染到页面上
+            var a = data.message; // 假设 data.message 是一个数组
+
+            // 清空 messageDiv 的内容
+            messageDiv.innerHTML = "历史信息:";
+
+            // 遍历数组，逐行添加到 messageDiv 中
+            a.forEach(line => {
+                // 创建一个新的 div 或 p 标签，并将内容添加到其中
+                var lineElement = document.createElement("div"); // 或者使用 "p"
+                lineElement.textContent = line; // 设置每行的内容
+                messageDiv.appendChild(lineElement); // 将行元素添加到 messageDiv 中
+            });
         })
         .catch(error => {
             console.error("Fetch error:", error); // 捕获并处理错误
