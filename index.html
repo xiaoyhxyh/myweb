@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>xiaoyh官网-首页</title>
+    <title>xiaoyh官网-首页
+    </title>
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -29,7 +30,6 @@
             color: var(--text-color);
         }
 
-        /* 头部区域优化 */
         .header-container {
             display: flex;
             justify-content: space-between;
@@ -44,7 +44,6 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
 
-        /* 导航按钮优化 */
         .button-group {
             display: flex;
             gap: 2rem;
@@ -64,7 +63,7 @@
             box-shadow: 0 5px 12px rgba(52, 152, 219, 0.3);
         }
 
-        /* 主要内容区域 */
+
         .main-content {
             flex: 1;
             padding: 2rem 5%;
@@ -73,7 +72,6 @@
             width: 100%;
         }
 
-        /* 信息输入区域优化 */
         .input-group {
             position: relative;
             max-width: 600px;
@@ -95,7 +93,7 @@
             box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
         }
 
-        /* 历史信息容器优化 */
+
         .history-container {
             background: var(--bg-overlay);
             border-radius: 12px;
@@ -105,7 +103,6 @@
             max-width: 800px;
         }
 
-        /* 云朵动画优化 */
         .cloud-container {
             position: fixed;
             bottom: 5%;
@@ -114,7 +111,7 @@
             opacity: 0.8;
         }
 
-        /* 响应式设计优化 */
+
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -141,7 +138,6 @@
             }
         }
 
-        /* 加载动画 */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -150,7 +146,7 @@
         .fade-in {
             animation: fadeIn 0.6s ease-out;
         }
-        /* 消息条目样式 */
+
     .message-item {
         padding: 1rem;
         margin: 0.5rem 0;
@@ -167,7 +163,7 @@
         margin-bottom: 0.5rem;
     }
 
-    /* 提示信息样式 */
+
     .toast {
         position: fixed;
         bottom: 2rem;
@@ -189,7 +185,7 @@
         background: #e74c3c;
     }
 
-    /* 加载动画 */
+
     @keyframes spin {
         to { transform: rotate(360deg); }
     }
@@ -202,6 +198,130 @@
         border-radius: 50%;
         animation: spin 1s linear infinite;
     }
+
+     body {
+        background: linear-gradient(45deg, 
+            rgba(255,255,255,0.9) 0%,
+            rgba(245,245,255,0.9) 100%),
+            url(index3.jpg) center/cover fixed;
+    }
+
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+
+    .service-card {
+        background: var(--bg-overlay);
+        padding: 2rem;
+        border-radius: 16px;
+        text-align: center;
+        transition: transform 0.3s;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    }
+
+    .service-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .service-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 1rem;
+        background: var(--secondary-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+    }
+
+    .stats-container {
+        display: flex;
+        justify-content: space-around;
+        margin: 4rem 0;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 1.5rem;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--secondary-color);
+        background: linear-gradient(to right, #3498db, #2c3e50);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+
+    .team-member {
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    .member-photo {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+
+    .member-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(255,255,255,0.9);
+        padding: 1rem;
+        transform: translateY(100%);
+        transition: all 0.3s;
+    }
+
+    .team-member:hover .member-info {
+        transform: translateY(0);
+    }
+
+    footer {
+        background: var(--primary-color);
+        color: white;
+        padding: 3rem 5%;
+        margin-top: auto;
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+
+    @keyframes borderGlow {
+        0% { box-shadow: 0 0 10px rgba(52, 152, 219, 0.3); }
+        50% { box-shadow: 0 0 20px rgba(52, 152, 219, 0.6); }
+        100% { box-shadow: 0 0 10px rgba(52, 152, 219, 0.3); }
+    }
+
+    .dynamic-border {
+        animation: borderGlow 3s infinite;
+    }
     </style>
 </head>
 <body>
@@ -213,7 +333,7 @@
             <a href="about.html" class="nav-button">📖 关于我们</a>
         </nav>
     </div>
-
+    
     <main class="main-content fade-in">
         <section class="intro-section">
             <h1 class="site-title">欢迎来到xiaoyh</h1>
@@ -222,7 +342,92 @@
                 <span>创立于2025年3月25日</span>
             </div>
         </section>
+        <main class="main-content fade-in">
+        
+            <section class="services-section">
+                <h2>核心服务 🚀</h2>
+                <div class="services-grid">
+                    <div class="service-card dynamic-border">
+                        <div class="service-icon">💻</div>
+                        <h3>网站开发</h3>
+                        <p>专业响应式网站建设，定制化解决方案</p>
+                    </div>
+                    <div class="service-card dynamic-border">
+                        <div class="service-icon">📱</div>
+                        <h3>移动应用</h3>
+                        <p>跨平台应用开发，原生性能体验</p>
+                    </div>
+                    <div class="service-card dynamic-border">
+                        <div class="service-icon">☁️</div>
+                        <h3>云服务</h3>
+                        <p>安全稳定的云端解决方案</p>
+                    </div>
+                </div>
+            </section>
+            <section class="stats-section">
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="0">0</div>
+                        <p>服务客户</p>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="0">0</div>
+                        <p>成功项目</p>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="0">0</div>
+                        <p>客户满意度%</p>
+                    </div>
+                </div>
+            </section>
+        
+            <section class="team-section">
+                <h2>核心团队 👥</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <img src="index2.jpg" alt="技术总监" class="member-photo">
+                        <div class="member-info">
+                            <h4>xiaoyh</h4>
+                            <p>科比</p>
+                            <p>0年开发经验</p>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <img src="index2.jpg" alt="设计总监" class="member-photo">
+                        <div class="member-info">
+                            <h4>xiaoyh</h4>
+                            <p>科比</p>
+                            <p>html大蛇</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script>
+            function animateNumbers() {
+                const counters = document.querySelectorAll('.stat-number');
+                counters.forEach(counter => {
+                    const target = +counter.getAttribute('data-count');
+                    const duration = 2000;
+                    const step = timestamp => {
+                        const start = timestamp || Date.now();
+                        const progress = Math.min((Date.now() - start) / duration, 1);
+                        counter.textContent = Math.floor(progress * target);
+                        if (progress < 1) requestAnimationFrame(step);
+                    };
+                    requestAnimationFrame(step);
+                });
+            }
+        
+            window.addEventListener('scroll', () => {
+                const statsSection = document.querySelector('.stats-section');
+                const position = statsSection.getBoundingClientRect();
+                if(position.top < window.innerHeight) {
+                    animateNumbers();
+                }
+            });
 
+        </script>
         <section class="message-section">
             <h2>留言板 💌</h2>
             <div class="input-group">
@@ -241,13 +446,9 @@
         </section>
     </main>
 
-    <div class="cloud-container">
-        <!-- 保留原有云朵动画 -->
-    </div>
+    <div class="cloud-container"></div>
 
-    <!-- 保留原有脚本 -->
     <script>
-        // 初始化加载历史消息
         function loadHistory() {
             const url = "https://2539-120-229-11-71.ngrok-free.app/get";
             fetch(url, {
@@ -270,7 +471,6 @@
             });
         }
     
-        // 发送消息函数
         async function sendContent() {
             const input = document.getElementById("inputContent");
             const content = input.value.trim();
@@ -293,13 +493,12 @@
                 const data = await response.json();
                 showToast(data.message || "发送成功！", true);
                 input.value = "";
-                loadHistory(); // 刷新历史记录
+                loadHistory();
             } catch (error) {
                 showToast("网络请求失败，请稍后重试");
             }
         }
     
-        // 显示提示信息
         function showToast(message, isSuccess = false) {
             const toast = document.createElement("div");
             toast.className = `toast ${isSuccess ? 'success' : 'error'}`;
@@ -310,9 +509,27 @@
                 toast.remove();
             }, 3000);
         }
-    
-        // 页面加载时获取历史记录
+
         document.addEventListener('DOMContentLoaded', loadHistory);
     </script>
+    <footer>
+        <div class="footer-content">
+            <div>
+                <h4>联系我们</h4>
+                <p>📞 400-1234-5678</p>
+                <p>📧 contact@xiaoyh.com</p>
+            </div>
+            <div>
+                <h4>办公地址</h4>
+                <p>🏢 北京市海淀区科技大厦18层</p>
+            </div>
+            <div>
+                <h4>关注我们</h4>
+                <p>📱 微信公众号：xiaoyh-tech</p>
+                <p>🐦 微博：@晓宇科技</p>
+            </div>
+        </div>
+        <p class="copyright">© 2025 晓宇科技 版权所有</p>
+    </footer>
 </body>
 </html>
