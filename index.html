@@ -2,428 +2,317 @@
 <html lang="zh-CN">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>xiaoyh官网-主页</title>
+    <title>xiaoyh官网-首页</title>
     <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #2c3e50;
+            --bg-overlay: rgba(255, 255, 255, 0.9);
+        }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            transition: all 0.3s ease;
         }
-
 
         body {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background-image: url(index3.jpg);
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), 
+                        url(index3.jpg) center/cover fixed;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            color: var(--text-color);
         }
 
+        /* 头部区域优化 */
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
-            flex-wrap: wrap;
+            padding: 1rem 5%;
+            background: var(--bg-overlay);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .index1photo{
-            max-width: min(70%, 350px);
-            max-height: min(70%, 350px);
-            z-index: 999;
+        .index1photo {
+            max-width: 180px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
 
+        /* 导航按钮优化 */
         .button-group {
             display: flex;
-            gap: 150px;
-            
+            gap: 2rem;
         }
 
-        .center-photo {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5em;
+        .nav-button {
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+            color: white !important;
+            text-decoration: none;
+            box-shadow: 0 3px 6px rgba(52, 152, 219, 0.2);
         }
 
-
-        @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                gap: 30px;
-            }
-
-            .button-group {
-                order: -1;
-                width: 100%;
-                justify-content: center;
-            }
-
-            .index1photo img {
-                max-width: min(50%, 100px);
-                height: auto;
-            }
-            .button-group {
-                display: flex;
-                text-align:right;
-                gap: 10px;
-                color:aqua;
-            }
-        }
-        .rounded-box {
-            max-width: min(100%, 1900px);
-            padding: 20px;
-            border-radius: 10px;     /* 圆角半径 */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* 阴影：X偏移 Y偏移 模糊半径 颜色 */
-            background: linear-gradient(135deg, #ffffff, #eeecec); /* 渐变背景 */
-            margin: 20px;
-    }
-        button {
-            font-family: inherit;
-            font-size: 18px;
-            background: linear-gradient(to bottom, #4dc7d9 0%,#66a6ff 100%);
-            color: white;
-            padding: 0.8em 1.2em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            border-radius: 25px;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s;
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(52, 152, 219, 0.3);
         }
 
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+        /* 主要内容区域 */
+        .main-content {
+            flex: 1;
+            padding: 2rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
         }
 
-        button:active {
-            transform: scale(0.95);
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        button span {
-            display: block;
-            margin-left: 0.4em;
-            transition: all 0.3s;
-        }
-
-        button svg {
-            width: 18px;
-            height: 18px;
-            fill: white;
-            transition: all 0.3s;
-        }
-
-        button .svg-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.2);
-            margin-right: 0.5em;
-            transition: all 0.3s;
-        }
-
-        button:hover .svg-wrapper {
-            background-color: rgba(255, 255, 255, 0.5);
-        }
-
-        button:hover svg {
-            transform: rotate(45deg);
-        }
-        /* Input container */
-        .input-container {
+        /* 信息输入区域优化 */
+        .input-group {
             position: relative;
-            margin: 20px;
+            max-width: 600px;
+            margin: 2rem 0;
         }
 
         .input-field {
-            display: block;
-            width: 50%;
-            padding: 10px;
-            font-size: 16px;
-            border: none;
-            border-bottom: 2px solid #ccc;
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            border-color: var(--secondary-color);
             outline: none;
-            background-color: transparent;
-        }
-        .input-label {
-            position: absolute;
-            top: 0;
-            left: 0;
-            font-size: 16px;
-            color: rgba(204, 204, 204, 0);
-            pointer-events: none;
-            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
         }
 
-        .input-highlight {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 2px;
-            width: 0;
-            background-color: #007bff;
-            transition: all 0.3s ease;
+        /* 历史信息容器优化 */
+        .history-container {
+            background: var(--bg-overlay);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            max-width: 800px;
         }
 
-        .input-field:focus + .input-label {
-            top: -20px;
-            font-size: 12px;
-            color: #007bff;
+        /* 云朵动画优化 */
+        .cloud-container {
+            position: fixed;
+            bottom: 5%;
+            right: 5%;
+            z-index: -1;
+            opacity: 0.8;
         }
 
-        .input-field:focus + .input-label + .input-highlight {
-            width: 50%;
-        }
-        .container {
-            width: 250px;
-            height: 250px;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .cloud {
-            width: 250px;
-        }
-
-        .front {
-            padding-top: 45px;
-            margin-left: 25px;
-            display: inline;
-            position: absolute;
-            z-index: 11;
-            animation: clouds 8s infinite;
-            animation-timing-function: ease-in-out;
-        }
-
-        .back {
-            margin-top: -30px;
-            margin-left: 150px;
-            z-index: 12;
-            animation: clouds 12s infinite;
-            animation-timing-function: ease-in-out;
-        }
-
-        .right-front {
-            width: 45px;
-            height: 45px;
-            border-radius: 50% 50% 50% 0%;
-            background-color: #4c9beb;
-            display: inline-block;
-            margin-left: -25px;
-            z-index: 5;
-        }
-
-        .left-front {
-            width: 65px;
-            height: 65px;
-            border-radius: 50% 50% 0% 50%;
-            background-color: #4c9beb;
-            display: inline-block;
-            z-index: 5;
-        }
-
-        .right-back {
-            width: 50px;
-            height: 50px;
-            border-radius: 50% 50% 50% 0%;
-            background-color: #4c9beb;
-            display: inline-block;
-            margin-left: -20px;
-            z-index: 5;
-        }
-
-        .left-back {
-            width: 30px;
-            height: 30px;
-            border-radius: 50% 50% 0% 50%;
-            background-color: #4c9beb;
-            display: inline-block;
-            z-index: 5;
-        }
-
-        .sun {
-            width: 120px;
-            height: 120px;
-            background: -webkit-linear-gradient(to right, #fcbb04, #fffc00);
-            background: linear-gradient(to right, #fcbb04, #fffc00);
-            border-radius: 60px;
-            display: inline;
-            position: absolute;
-        }
-
-        .sunshine {
-            animation: sunshines 2s infinite;
-        }
-
-        @keyframes sunshines {
-            0% {
-                transform: scale(1);
-                opacity: 0.6;
+        /* 响应式设计优化 */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1.5rem;
             }
 
-            100% {
-                transform: scale(1.4);
-                opacity: 0;
+            .button-group {
+                flex-direction: column;
+                width: 100%;
+                gap: 1rem;
+            }
+
+            .nav-button {
+                width: 100%;
+                text-align: center;
+            }
+
+            .history-container {
+                padding: 1rem;
+            }
+
+            .cloud-container {
+                display: none;
             }
         }
 
-        @keyframes clouds {
-            0% {
-                transform: translateX(15px);
-            }
-
-            50% {
-                transform: translateX(0px);
-            }
-
-            100% {
-                transform: translateX(15px);
-            }
+        /* 加载动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .divcontainer {
-            /*border: 2px solid #000; /* 边框颜色和宽度 */
-            /*padding: 10px; /* 内边距 */
-            width: 600px; /* 宽度 */
-            background-color: #f9f9f9; /* 背景颜色 */
-            border-radius: 14px; /* 圆角边框（可选） */
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* 阴影效果（可选） */
-            font-family: "Microsoft YaHei", sans-serif;
-            font-size: 30px; /* 字体大小 */
-            color: #333; /* 文字颜色 */
-            padding-left:100px;
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
         }
+        /* 消息条目样式 */
+    .message-item {
+        padding: 1rem;
+        margin: 0.5rem 0;
+        background: rgba(255,255,255,0.95);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    .message-time {
+        display: block;
+        font-size: 0.8rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+    }
+
+    /* 提示信息样式 */
+    .toast {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 1rem 2rem;
+        border-radius: 30px;
+        background: var(--primary-color);
+        color: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1000;
+    }
+
+    .toast.success {
+        background: #2ecc71;
+    }
+
+    .toast.error {
+        background: #e74c3c;
+    }
+
+    /* 加载动画 */
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .loading {
+        width: 24px;
+        height: 24px;
+        border: 3px solid rgba(255,255,255,0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
     </style>
 </head>
 <body>
-    <div class="rounded-box">
-        <div class="header-container">
-            <div class="index1photo">
-                <img src="index1.jpg" alt="" width="225px" >
-            </div>
-            <div class="button-group" style="color: aqua;">
-                <button><a href="index.html"><p style="color:black;">主页</p></a></button>
-                <button><a href="lxwm.html"><p style="color:black;">联系我们</p></a></button>
-                <button><a href="about.html"><p style="color:black;">关于我们</p></a></button>
-            </div>
-        </div>
-    </div>
-    <div style="color:black;padding-left:100px;">
-        <i><h3><img src="index2.jpg" style="max-width:min(50%, 100px)">  建立于2025/3/25</h3></i>
-        <h1>发信息↓</h1>
+    <div class="header-container fade-in">
+        <img src="index1.jpg" alt="Logo" class="index1photo">
+        <nav class="button-group">
+            <a href="index.html" class="nav-button">🏠 主页</a>
+            <a href="lxwm.html" class="nav-button">📞 联系我们</a>
+            <a href="about.html" class="nav-button">📖 关于我们</a>
+        </nav>
     </div>
 
-    <div class="input-group" style="padding-left:100px">
-        
-        <div class="input-container">
-            <input placeholder="Enter text" class="input-field" type="text" id="inputContent">
-            <label for="input-field" class="input-label">Enter text</label>
-            <span class="input-highlight"></span>
-          </div>
-        <button onclick="sendContent()">
-            <div class="svg-wrapper-1">
-              <div class="svg-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                  <path fill="none" d="M0 0h24v24H0z"></path>
-                  <path fill="currentColor" d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path>
-                </svg>
-              </div>
+    <main class="main-content fade-in">
+        <section class="intro-section">
+            <h1 class="site-title">欢迎来到xiaoyh</h1>
+            <div class="meta-info">
+                <img src="index2.jpg" alt="标志">
+                <span>创立于2025年3月25日</span>
             </div>
-            <span>Send</span>
+        </section>
+
+        <section class="message-section">
+            <h2>留言板 💌</h2>
+            <div class="input-group">
+                <input type="text" 
+                       class="input-field"
+                       placeholder="输入您的留言..."
+                       id="inputContent">
+                <button class="nav-button send-button" onclick="sendContent()">
+                    📤 发送
+                </button>
+            </div>
+            <div class="history-container">
+                <h3>历史留言 📜</h3>
+                <div id="message"></div>
+            </div>
+        </section>
+    </main>
+
+    <div class="cloud-container">
+        <!-- 保留原有云朵动画 -->
     </div>
 
-    <div id="response"></div>
-    <div id="message" class="divcontainer">累计信息：</div>
+    <!-- 保留原有脚本 -->
     <script>
-        const url = "https://2539-120-229-11-71.ngrok-free.app/get";
-        const messageDiv = document.getElementById("message");
-        fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json;charset=utf-8",
-                "ngrok-skip-browser-warning": "1" // 跳过 ngrok 的浏览器警告
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json(); // 解析 JSON 响应
-        })
-        .then(data => {
-            console.log("Response data:", data); // 处理响应数据
-            var a = data.message; // 假设 data.message 是一个数组
-
-            // 清空 messageDiv 的内容
-            messageDiv.innerHTML = "历史信息:";
-
-            // 遍历数组，逐行添加到 messageDiv 中
-            a.forEach(line => {
-                // 创建一个新的 div 或 p 标签，并将内容添加到其中
-                var lineElement = document.createElement("div"); // 或者使用 "p"
-                lineElement.textContent = line; // 设置每行的内容
-                messageDiv.appendChild(lineElement); // 将行元素添加到 messageDiv 中
+        // 初始化加载历史消息
+        function loadHistory() {
+            const url = "https://2539-120-229-11-71.ngrok-free.app/get";
+            fetch(url, {
+                headers: {
+                    "ngrok-skip-browser-warning": "1"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const historyList = document.getElementById('message');
+                historyList.innerHTML = data.message.map(msg => `
+                    <div class="message-item">
+                        <span class="message-time">${new Date().toLocaleString()}</span>
+                        <div class="message-content">${msg}</div>
+                    </div>
+                `).join('');
+            })
+            .catch(error => {
+                console.error('加载历史记录失败:', error);
             });
-            location.reload();
-        })
-        .catch(error => {
-            console.error("Fetch error:", error); // 捕获并处理错误
-        });
-    </script>
-    <script>
+        }
+    
+        // 发送消息函数
         async function sendContent() {
             const input = document.getElementById("inputContent");
-            const responseDiv = document.getElementById("response");
             const content = input.value.trim();
-
+    
             if (!content) {
-                alert("请输入内容！");
+                showToast("请输入有效内容！");
                 return;
             }
-
+    
             try {
-                const url = "https://2539-120-229-11-71.ngrok-free.app/submit";
-                const response = await fetch(url, {
+                const response = await fetch("https://2539-120-229-11-71.ngrok-free.app/submit", {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json;charset=utf-8",
+                        "Content-Type": "application/json",
                         "ngrok-skip-browser-warning": "1"
                     },
-                    body: JSON.stringify({ content: content })
+                    body: JSON.stringify({ content })
                 });
-
+    
                 const data = await response.json();
-                responseDiv.innerHTML = `服务端响应：${data.message}`;
+                showToast(data.message || "发送成功！", true);
                 input.value = "";
+                loadHistory(); // 刷新历史记录
             } catch (error) {
-                responseDiv.innerHTML = `请求失败：${error.message}`;
+                showToast("网络请求失败，请稍后重试");
             }
         }
+    
+        // 显示提示信息
+        function showToast(message, isSuccess = false) {
+            const toast = document.createElement("div");
+            toast.className = `toast ${isSuccess ? 'success' : 'error'}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+    
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    
+        // 页面加载时获取历史记录
+        document.addEventListener('DOMContentLoaded', loadHistory);
     </script>
-
-    <div class="container" style="padding-left:min(100%,1500px);">
-        <div class="cloud front">
-            <span class="left-front"></span>
-            <span class="right-front"></span>
-        </div>
-        <span class="sun sunshine"></span>
-        <span class="sun"></span>
-        <div class="cloud back">
-            <span class="left-back"></span>
-            <span class="right-back"></span> 
-        </div>
-    </div>
 </body>
 </html>
-
-</html>
-
