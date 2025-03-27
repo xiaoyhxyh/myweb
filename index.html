@@ -292,14 +292,15 @@
         }
         .divcontainer {
             /*border: 2px solid #000; /* 边框颜色和宽度 */
-            padding: 10px; /* 内边距 */
-            width: 350px; /* 宽度 */
+            /*padding: 10px; /* 内边距 */
+            width: 600px; /* 宽度 */
             background-color: #f9f9f9; /* 背景颜色 */
             border-radius: 14px; /* 圆角边框（可选） */
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* 阴影效果（可选） */
             font-family: "Microsoft YaHei", sans-serif;
             font-size: 30px; /* 字体大小 */
             color: #333; /* 文字颜色 */
+            padding-left:100px;
         }
     </style>
 </head>
@@ -372,6 +373,7 @@
                 lineElement.textContent = line; // 设置每行的内容
                 messageDiv.appendChild(lineElement); // 将行元素添加到 messageDiv 中
             });
+            location.reload();
         })
         .catch(error => {
             console.error("Fetch error:", error); // 捕获并处理错误
