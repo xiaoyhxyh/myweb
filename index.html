@@ -495,7 +495,7 @@
 
         // 留言板模块
         const messageBoard = (function() {
-            const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB限制
+            const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 5MB限制
             let selectedFiles = [];
             const API_BASE = 'https://aware-ghost-shortly.ngrok-free.app';
 
@@ -598,7 +598,7 @@
                         // 兼容处理新旧数据格式
                         const content = typeof msg === 'string' ? msg : (msg.content || '');
                         const images = (typeof msg === 'object' && msg.images) ? 
-                                      msg.images.map(img => `${API_BASE}${img}`) : [];
+                        msg.images.map(img => `${API_BASE}${img}`) : [];
                         
                         return `
                             <div class="message-item">
@@ -610,7 +610,7 @@
                                 </div>
                                 <div class="message-content">${content}</div>
                                 ${images.map(img => `
-                                    <img src="${img}" 
+                                    <img src="${img}?ngrok-skip-browser-warning=1" 
                                          class="message-image" 
                                          alt="上传图片"
                                          loading="lazy">
