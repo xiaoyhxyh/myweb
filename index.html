@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>xiaoyh官网-首页
-    </title>
+    <title>xiaoyh官网-首页</title>
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -30,6 +30,7 @@
             color: var(--text-color);
         }
 
+        /* 头部样式 */
         .header-container {
             display: flex;
             justify-content: space-between;
@@ -37,6 +38,9 @@
             padding: 1rem 5%;
             background: var(--bg-overlay);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .index1photo {
@@ -56,6 +60,9 @@
             color: white !important;
             text-decoration: none;
             box-shadow: 0 3px 6px rgba(52, 152, 219, 0.2);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
         }
 
         .nav-button:hover {
@@ -63,28 +70,136 @@
             box-shadow: 0 5px 12px rgba(52, 152, 219, 0.3);
         }
 
-
+        /* 主要内容区 */
         .main-content {
             flex: 1;
-            padding: 2rem 5%;
+            padding: 3rem 5%;
             max-width: 1200px;
             margin: 0 auto;
             width: 100%;
         }
 
-        .input-group {
+        .site-title {
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+        }
+
+        /* 服务卡片 */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .service-card {
+            background: var(--bg-overlay);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+            transition: transform 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 1.5rem;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            box-shadow: 0 3px 10px rgba(52, 152, 219, 0.3);
+        }
+
+        /* 统计数字 */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg-overlay);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 团队展示 */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .team-member {
             position: relative;
-            max-width: 600px;
-            margin: 2rem 0;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            height: 300px;
+        }
+
+        .member-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s;
+        }
+
+        .member-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.9);
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: all 0.3s;
+        }
+
+        .team-member:hover .member-info {
+            transform: translateY(0);
+        }
+
+        /* 留言板样式 */
+        .message-section {
+            margin: 4rem 0;
+        }
+
+        .input-group {
+            max-width: 800px;
+            margin: 2rem auto;
         }
 
         .input-field {
             width: 100%;
-            padding: 1rem;
+            padding: 1.2rem;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            margin-bottom: 1rem;
         }
 
         .input-field:focus {
@@ -93,25 +208,113 @@
             box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
         }
 
+        .file-upload {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        #imagePreview {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .preview-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .preview-image:hover {
+            transform: scale(1.05);
+            border-color: var(--secondary-color);
+        }
 
         .history-container {
             background: var(--bg-overlay);
             border-radius: 12px;
             padding: 2rem;
-            margin: 2rem 0;
+            margin-top: 2rem;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            max-width: 800px;
         }
 
-        .cloud-container {
+        .message-item {
+            padding: 1.5rem;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .message-time {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .message-image {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+
+        /* 页脚 */
+        footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 3rem 5%;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        /* 提示框 */
+        .toast {
             position: fixed;
-            bottom: 5%;
-            right: 5%;
-            z-index: -1;
-            opacity: 0.8;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: toastFade 3s forwards;
         }
 
+        .toast.success {
+            background: #2ecc71;
+        }
 
+        .toast.error {
+            background: #e74c3c;
+        }
+
+        @keyframes toastFade {
+            0%, 100% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* 响应式设计 */
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -129,204 +332,18 @@
                 text-align: center;
             }
 
-            .history-container {
-                padding: 1rem;
+            .site-title {
+                font-size: 2.2rem;
             }
 
-            .cloud-container {
-                display: none;
+            .service-card, .stat-item {
+                padding: 1.5rem;
             }
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.6s ease-out;
-        }
-
-    .message-item {
-        padding: 1rem;
-        margin: 0.5rem 0;
-        background: rgba(255,255,255,0.95);
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        animation: fadeIn 0.6s ease-out;
-    }
-
-    .message-time {
-        display: block;
-        font-size: 0.8rem;
-        color: #666;
-        margin-bottom: 0.5rem;
-    }
-
-
-    .toast {
-        position: fixed;
-        bottom: 2rem;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 1rem 2rem;
-        border-radius: 30px;
-        background: var(--primary-color);
-        color: white;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        z-index: 1000;
-    }
-
-    .toast.success {
-        background: #2ecc71;
-    }
-
-    .toast.error {
-        background: #e74c3c;
-    }
-
-
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-
-    .loading {
-        width: 24px;
-        height: 24px;
-        border: 3px solid rgba(255,255,255,0.3);
-        border-top-color: white;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
-     body {
-        background: linear-gradient(45deg, 
-            rgba(255,255,255,0.9) 0%,
-            rgba(245,245,255,0.9) 100%),
-            url(index3.jpg) center/cover fixed;
-    }
-
-
-    .services-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 2rem;
-        margin: 3rem 0;
-    }
-
-    .service-card {
-        background: var(--bg-overlay);
-        padding: 2rem;
-        border-radius: 16px;
-        text-align: center;
-        transition: transform 0.3s;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-    }
-
-    .service-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .service-icon {
-        width: 60px;
-        height: 60px;
-        margin: 0 auto 1rem;
-        background: var(--secondary-color);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        color: white;
-    }
-
-    .stats-container {
-        display: flex;
-        justify-content: space-around;
-        margin: 4rem 0;
-        flex-wrap: wrap;
-        gap: 2rem;
-    }
-
-    .stat-item {
-        text-align: center;
-        padding: 1.5rem;
-    }
-
-    .stat-number {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: var(--secondary-color);
-        background: linear-gradient(to right, #3498db, #2c3e50);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .team-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 2rem;
-        margin: 3rem 0;
-    }
-
-    .team-member {
-        position: relative;
-        overflow: hidden;
-        border-radius: 16px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-    }
-
-    .member-photo {
-        width: 100%;
-        height: 250px;
-        object-fit: cover;
-        transition: transform 0.3s;
-    }
-
-    .member-info {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(255,255,255,0.9);
-        padding: 1rem;
-        transform: translateY(100%);
-        transition: all 0.3s;
-    }
-
-    .team-member:hover .member-info {
-        transform: translateY(0);
-    }
-
-    footer {
-        background: var(--primary-color);
-        color: white;
-        padding: 3rem 5%;
-        margin-top: auto;
-    }
-
-    .footer-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 2rem;
-    }
-
-    @keyframes borderGlow {
-        0% { box-shadow: 0 0 10px rgba(52, 152, 219, 0.3); }
-        50% { box-shadow: 0 0 20px rgba(52, 152, 219, 0.6); }
-        100% { box-shadow: 0 0 10px rgba(52, 152, 219, 0.3); }
-    }
-
-    .dynamic-border {
-        animation: borderGlow 3s infinite;
-    }
-    
     </style>
 </head>
 <body>
-    <div class="header-container fade-in">
+    <div class="header-container">
         <img src="index1.jpg" alt="Logo" class="index1photo">
         <nav class="button-group">
             <a href="index.html" class="nav-button">🏠 主页</a>
@@ -335,7 +352,7 @@
         </nav>
     </div>
     
-    <main class="main-content fade-in">
+    <main class="main-content">
         <section class="intro-section">
             <h1 class="site-title">欢迎来到xiaoyh</h1>
             <div class="meta-info">
@@ -343,92 +360,67 @@
                 <span>创立于2025年3月25日</span>
             </div>
         </section>
-        <main class="main-content fade-in">
-        
-            <section class="services-section">
-                <h2>核心服务 🚀</h2>
-                <div class="services-grid">
-                    <div class="service-card dynamic-border">
-                        <div class="service-icon">💻</div>
-                        <h3>网站开发</h3>
-                        <p>专业响应式网站建设，定制化解决方案</p>
-                    </div>
-                    <div class="service-card dynamic-border">
-                        <div class="service-icon">📱</div>
-                        <h3>移动应用</h3>
-                        <p>跨平台应用开发，原生性能体验</p>
-                    </div>
-                    <div class="service-card dynamic-border">
-                        <div class="service-icon">☁️</div>
-                        <h3>云服务</h3>
-                        <p>安全稳定的云端解决方案</p>
-                    </div>
-                </div>
-            </section>
-            <section class="stats-section">
-                <div class="stats-container">
-                    <div class="stat-item">
-                        <div class="stat-number" data-count="0">0</div>
-                        <p>服务客户</p>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" data-count="0">0</div>
-                        <p>成功项目</p>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" data-count="0">0</div>
-                        <p>客户满意度%</p>
-                    </div>
-                </div>
-            </section>
-        
-            <section class="team-section">
-                <h2>核心团队 👥</h2>
-                <div class="team-grid">
-                    <div class="team-member">
-                        <img src="index2.jpg" alt="技术总监" class="member-photo">
-                        <div class="member-info">
-                            <h4>xiaoyh</h4>
-                            <p>科比</p>
-                            <p>0年开发经验</p>
-                        </div>
-                    </div>
-                    <div class="team-member">
-                        <img src="index2.jpg" alt="设计总监" class="member-photo">
-                        <div class="member-info">
-                            <h4>xiaoyh</h4>
-                            <p>科比</p>
-                            <p>html大蛇</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-        <script>
-            function animateNumbers() {
-                const counters = document.querySelectorAll('.stat-number');
-                counters.forEach(counter => {
-                    const target = +counter.getAttribute('data-count');
-                    const duration = 2000;
-                    const step = timestamp => {
-                        const start = timestamp || Date.now();
-                        const progress = Math.min((Date.now() - start) / duration, 1);
-                        counter.textContent = Math.floor(progress * target);
-                        if (progress < 1) requestAnimationFrame(step);
-                    };
-                    requestAnimationFrame(step);
-                });
-            }
-        
-            window.addEventListener('scroll', () => {
-                const statsSection = document.querySelector('.stats-section');
-                const position = statsSection.getBoundingClientRect();
-                if(position.top < window.innerHeight) {
-                    animateNumbers();
-                }
-            });
 
-        </script>
+        <section class="services-section">
+            <h2>核心服务 🚀</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">💻</div>
+                    <h3>网站开发</h3>
+                    <p>专业响应式网站建设，定制化解决方案</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📱</div>
+                    <h3>移动应用</h3>
+                    <p>跨平台应用开发，原生性能体验</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">☁️</div>
+                    <h3>云服务</h3>
+                    <p>安全稳定的云端解决方案</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="0">0</div>
+                    <p>服务客户</p>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="0">0</div>
+                    <p>成功项目</p>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="0">0</div>
+                    <p>客户满意度</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="team-section">
+            <h2>核心团队 👥</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="team1.jpg" alt="技术总监" class="member-photo">
+                    <div class="member-info">
+                        <h4>xiaoyh</h4>
+                        <p>技术总监</p>
+                        <p>5年开发经验</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <img src="team2.jpg" alt="设计总监" class="member-photo">
+                    <div class="member-info">
+                        <h4>科比</h4>
+                        <p>设计总监</p>
+                        <p>UI/UX设计专家</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="message-section">
             <h2>留言板 💌</h2>
             <div class="input-group">
@@ -436,84 +428,26 @@
                        class="input-field"
                        placeholder="输入您的留言..."
                        id="inputContent">
-                <button class="nav-button send-button" onclick="sendContent()">
-                    📤 发送
+                <div class="file-upload">
+                    <input type="file" 
+                           id="imageUpload" 
+                           accept="image/*" 
+                           multiple
+                           style="display: none;">
+                    <label for="imageUpload" class="nav-button">📷 添加图片</label>
+                    <div id="imagePreview"></div>
+                </div>
+                <button class="nav-button send-button" onclick="messageBoard.sendContent()">
+                    📤 发送留言
                 </button>
             </div>
             <div class="history-container">
                 <h3>历史留言 📜</h3>
-                <div id="message"></div>
+                <div id="messageList"></div>
             </div>
         </section>
     </main>
 
-    <div class="cloud-container"></div>
-
-    <script>
-        function loadHistory() {
-            const url = "https://aware-ghost-shortly.ngrok-free.app/get";
-            fetch(url, {
-                headers: {
-                    "ngrok-skip-browser-warning": "1"
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const historyList = document.getElementById('message');
-                historyList.innerHTML = data.message.map(msg => `
-                    <div class="message-item">
-                        <span class="message-time">${new Date().toLocaleString()}</span>
-                        <div class="message-content">${msg}</div>
-                    </div>
-                `).join('');
-                showToast("获取留言成功",true);
-            })
-            .catch(error => {
-                console.error('加载历史记录失败:', error);
-            });
-        }
-    
-        async function sendContent() {
-            const input = document.getElementById("inputContent");
-            const content = input.value.trim();
-    
-            if (!content) {
-                showToast("请输入有效内容！");
-                return;
-            }
-    
-            try {
-                const response = await fetch("https://aware-ghost-shortly.ngrok-free.app/submit", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "ngrok-skip-browser-warning": "1"
-                    },
-                    body: JSON.stringify({ content })
-                });
-    
-                const data = await response.json();
-                showToast(data.message || "发送成功！", true);
-                input.value = "";
-                loadHistory();
-            } catch (error) {
-                showToast("网络请求失败，请稍后重试");
-            }
-        }
-    
-        function showToast(message, isSuccess = false) {
-            const toast = document.createElement("div");
-            toast.className = `toast ${isSuccess ? 'success' : 'error'}`;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-    
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
-
-        document.addEventListener('DOMContentLoaded', loadHistory);
-    </script>
     <footer>
         <div class="footer-content">
             <div>
@@ -527,11 +461,192 @@
             </div>
             <div>
                 <h4>关注我们</h4>
-                <p>📱 2321234001</p>
-                <p>🐦 2321234001</p>
+                <p>📱 微信公众号: xiaoyh-tech</p>
+                <p>🐦 微博: @xiaoyh官方</p>
             </div>
         </div>
         <p class="copyright">© 2025 xiaoyh 版权所有</p>
     </footer>
+
+    <script>
+        // 数字动画
+        function animateNumbers() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-count');
+                const duration = 2000;
+                const step = timestamp => {
+                    const start = timestamp || Date.now();
+                    const progress = Math.min((Date.now() - start) / duration, 1);
+                    counter.textContent = Math.floor(progress * target);
+                    if (progress < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+            });
+        }
+        
+        window.addEventListener('scroll', () => {
+            const statsSection = document.querySelector('.stats-section');
+            const position = statsSection.getBoundingClientRect();
+            if(position.top < window.innerHeight) {
+                animateNumbers();
+            }
+        });
+
+        // 留言板模块
+        const messageBoard = (function() {
+            const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB限制
+            let selectedFiles = [];
+            const API_BASE = 'https://aware-ghost-shortly.ngrok-free.app';
+
+            // 初始化
+            function init() {
+                document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
+                loadHistory();
+            }
+
+            // 处理图片上传
+            function handleImageUpload(e) {
+                const files = Array.from(e.target.files).filter(file => {
+                    if(!file.type.startsWith('image/')) {
+                        showToast(`文件 ${file.name} 不是图片格式`, false);
+                        return false;
+                    }
+                    if(file.size > MAX_FILE_SIZE){
+                        showToast(`文件 ${file.name} 超过5MB限制`, false);
+                        return false;
+                    }
+                    return true;
+                });
+                
+                if(files.length === 0) return;
+                
+                selectedFiles = [...selectedFiles, ...files];
+                updateImagePreview();
+            }
+
+            // 更新图片预览
+            function updateImagePreview() {
+                const preview = document.getElementById('imagePreview');
+                preview.innerHTML = '';
+                
+                selectedFiles.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = document.createElement('img');
+                        img.className = 'preview-image';
+                        img.src = e.target.result;
+                        img.onclick = () => removeImage(index);
+                        preview.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // 移除图片
+            function removeImage(index) {
+                selectedFiles.splice(index, 1);
+                updateImagePreview();
+            }
+
+            // 发送留言
+            async function sendContent() {
+                const input = document.getElementById("inputContent");
+                const content = input.value.trim();
+
+                if (!content && selectedFiles.length === 0) {
+                    showToast("请输入内容或选择图片！", false);
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('content', content);
+                selectedFiles.forEach(file => formData.append('images', file));
+
+                try {
+                    const response = await fetch(`${API_BASE}/submit`, {
+                        method: "POST",
+                        headers: { "ngrok-skip-browser-warning": "1" },
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        showToast("留言发送成功！", true);
+                        input.value = "";
+                        selectedFiles = [];
+                        document.getElementById('imagePreview').innerHTML = '';
+                        loadHistory();
+                    } else {
+                        showToast(data.message || "发送失败", false);
+                    }
+                } catch (error) {
+                    showToast("网络请求失败，请稍后重试", false);
+                }
+            }
+
+            // 加载历史记录（已修复图片显示问题）
+            async function loadHistory() {
+                try {
+                    const response = await fetch(`${API_BASE}/get`, {
+                        headers: { "ngrok-skip-browser-warning": "1" }
+                    });
+                    const data = await response.json();
+                    
+                    const container = document.getElementById('messageList');
+                    container.innerHTML = data.message.map(msg => {
+                        // 兼容处理新旧数据格式
+                        const content = typeof msg === 'string' ? msg : (msg.content || '');
+                        const images = (typeof msg === 'object' && msg.images) ? 
+                                      msg.images.map(img => `${API_BASE}${img}`) : [];
+                        
+                        return `
+                            <div class="message-item">
+                                <div class="message-time">
+                                    <svg width="16" height="16" viewBox="0 0 24 24">
+                                        <path fill="#666" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2m0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8m.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                                    </svg>
+                                    ${new Date().toLocaleString()}
+                                </div>
+                                <div class="message-content">${content}</div>
+                                ${images.map(img => `
+                                    <img src="${img}" 
+                                         class="message-image" 
+                                         alt="上传图片"
+                                         loading="lazy">
+                                `).join('')}
+                            </div>
+                        `;
+                    }).join('');
+                } catch (error) {
+                    console.error('加载失败:', error);
+                    showToast("加载历史记录失败", false);
+                }
+            }
+
+            // 显示提示
+            function showToast(message, isSuccess = false) {
+                const toast = document.createElement("div");
+                toast.className = `toast ${isSuccess ? 'success' : 'error'}`;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+
+            return {
+                init,
+                sendContent,
+                loadHistory
+            };
+        })();
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            messageBoard.init();
+        });
+    </script>
 </body>
 </html>
