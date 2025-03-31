@@ -403,7 +403,7 @@
             <h2>核心团队 👥</h2>
             <div class="team-grid">
                 <div class="team-member">
-                    <img src="team1.jpg" alt="技术总监" class="member-photo">
+                    <img src="index1.jpg" alt="技术总监" class="member-photo">
                     <div class="member-info">
                         <h4>xiaoyh</h4>
                         <p>技术总监</p>
@@ -411,7 +411,7 @@
                     </div>
                 </div>
                 <div class="team-member">
-                    <img src="team2.jpg" alt="设计总监" class="member-photo">
+                    <img src="index2.jpg" alt="设计总监" class="member-photo">
                     <div class="member-info">
                         <h4>科比</h4>
                         <p>设计总监</p>
@@ -482,7 +482,7 @@
                     if (progress < 1) requestAnimationFrame(step);
                 };
                 requestAnimationFrame(step);
-            });
+            });      
         }
         
         window.addEventListener('scroll', () => {
@@ -497,7 +497,7 @@
         const messageBoard = (function() {
             const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 5MB限制
             let selectedFiles = [];
-            const API_BASE = 'https://aware-ghost-shortly.ngrok-free.app';
+            const API_BASE = 'https://7b93-120-231-232-115.ngrok-free.app';
 
             // 初始化
             function init() {
@@ -610,7 +610,7 @@
                                 </div>
                                 <div class="message-content">${content}</div>
                                 ${images.map(img => `
-                                    <img src="${img}?ngrok-skip-browser-warning=1" 
+                                    <img src="${img}" 
                                          class="message-image" 
                                          alt="上传图片"
                                          loading="lazy">
@@ -643,7 +643,6 @@
             };
         })();
 
-        // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', () => {
             messageBoard.init();
         });
