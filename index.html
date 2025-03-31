@@ -497,7 +497,7 @@
         const messageBoard = (function() {
             const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 5MB限制
             let selectedFiles = [];
-            const API_BASE = 'https://7b93-120-231-232-115.ngrok-free.app';
+            const API_BASE = 'https://aware-ghost-shortly.ngrok-free.app';
 
             // 初始化
             function init() {
@@ -610,10 +610,10 @@
                                 </div>
                                 <div class="message-content">${content}</div>
                                 ${images.map(img => `
-                                    <img src="${img}" 
-                                         class="message-image" 
-                                         alt="上传图片"
-                                         loading="lazy">
+                                    <img src="${img}?v=${Date.now()}" 
+                                        class="message-image" 
+                                        alt="上传图片"
+                                        loading="lazy">
                                 `).join('')}
                             </div>
                         `;
