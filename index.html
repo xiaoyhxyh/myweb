@@ -340,6 +340,33 @@
                 padding: 1.5rem;
             }
         }
+        .loading {
+            text-align: center;
+            padding: 1rem;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            border: 2px solid #ddd;
+            border-top-color: var(--secondary-color);
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .send-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -492,159 +519,232 @@
                 animateNumbers();
             }
         });
-
-        // 留言板模块
         const messageBoard = (function() {
-            const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 5MB限制
+            const MAX_FILE_SIZE = 100 * 1024 * 1024; // 5MB
+            const API_BASE = 'https://aware-ghost-shortly.ngrok-free.app/';
+            const PAGE_SIZE = 10;
+            
             let selectedFiles = [];
-            const API_BASE = 'https://aware-ghost-shortly.ngrok-free.app';
+            let currentPage = 1;
+            let isLoading = false;
+            let hasMore = true;
 
-            // 初始化
-            function init() {
+            async function init() {
                 document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
-                loadHistory();
+                await loadHistory(true);
+                window.addEventListener('scroll', handleScroll);
             }
 
-            // 处理图片上传
-            function handleImageUpload(e) {
-                const files = Array.from(e.target.files).filter(file => {
-                    if(!file.type.startsWith('image/')) {
-                        showToast(`文件 ${file.name} 不是图片格式`, false);
-                        return false;
-                    }
-                    if(file.size > MAX_FILE_SIZE){
-                        showToast(`文件 ${file.name} 超过5MB限制`, false);
-                        return false;
-                    }
-                    return true;
-                });
-                
-                if(files.length === 0) return;
-                
-                selectedFiles = [...selectedFiles, ...files];
+            async function handleImageUpload(e) {
+                const files = await Promise.all(
+                    Array.from(e.target.files)
+                        .filter(file => file.size <= MAX_FILE_SIZE)
+                        .map(compressImage)
+                );
+                selectedFiles.push(...files);
                 updateImagePreview();
             }
 
-            // 更新图片预览
-            function updateImagePreview() {
-                const preview = document.getElementById('imagePreview');
-                preview.innerHTML = '';
+            async function compressImage(file) {
+                if (!file.type.startsWith('image/')) return file;
                 
-                selectedFiles.forEach((file, index) => {
+                return new Promise((resolve) => {
                     const reader = new FileReader();
                     reader.onload = (e) => {
-                        const img = document.createElement('img');
-                        img.className = 'preview-image';
+                        const img = new Image();
                         img.src = e.target.result;
-                        img.onclick = () => removeImage(index);
-                        preview.appendChild(img);
+                        
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            let width = img.width;
+                            let height = img.height;
+
+                            // 限制最大尺寸
+                            if (width > 1920 || height > 1080) {
+                                const ratio = Math.min(1920 / width, 1080 / height);
+                                width *= ratio;
+                                height *= ratio;
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            canvas.toBlob(blob => {
+                                resolve(new File([blob], file.name, {
+                                    type: 'image/jpeg',
+                                    lastModified: Date.now()
+                                }));
+                            }, 'image/jpeg', 0.7);
+                        };
                     };
                     reader.readAsDataURL(file);
                 });
             }
 
-            // 移除图片
+            function updateImagePreview() {
+                const preview = document.getElementById('imagePreview');
+                preview.innerHTML = selectedFiles.map((file, index) => `
+                    <img src="${URL.createObjectURL(file)}" 
+                         class="preview-image"
+                         onclick="messageBoard.removeImage(${index})">
+                `).join('');
+            }
+
             function removeImage(index) {
                 selectedFiles.splice(index, 1);
                 updateImagePreview();
             }
 
-            // 发送留言
             async function sendContent() {
-                const input = document.getElementById("inputContent");
-                const content = input.value.trim();
-
-                if (!content && selectedFiles.length === 0) {
-                    showToast("请输入内容或选择图片！", false);
-                    return;
-                }
-
-                const formData = new FormData();
-                formData.append('content', content);
-                selectedFiles.forEach(file => formData.append('images', file));
-
+                const btn = document.querySelector('.send-button');
+                const input = document.getElementById('inputContent');
+                
                 try {
+                    btn.disabled = true;
+                    btn.textContent = '发送中...';
+
+                    const formData = new FormData();
+                    formData.append('content', input.value.trim());
+                    selectedFiles.forEach(file => formData.append('images', file));
+
+                    // 分片上传
+                    await Promise.all(
+                        selectedFiles.map(file => uploadFileInChunks(file, 1024 * 1024))
+                    );
+
                     const response = await fetch(`${API_BASE}/submit`, {
-                        method: "POST",
+                        method: 'POST',
                         headers: { "ngrok-skip-browser-warning": "1" },
                         body: formData
                     });
 
-                    const data = await response.json();
-                    if (data.status === 'success') {
-                        showToast("留言发送成功！", true);
-                        input.value = "";
+                    if (response.ok) {
+                        showToast('发送成功!', true);
+                        input.value = '';
                         selectedFiles = [];
-                        document.getElementById('imagePreview').innerHTML = '';
-                        loadHistory();
-                    } else {
-                        showToast(data.message || "发送失败", false);
+                        updateImagePreview();
+                        await loadHistory(true);
                     }
                 } catch (error) {
-                    showToast("网络请求失败，请稍后重试", false);
+                    showToast('发送失败: ' + error.message, false);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '📤 发送留言';
                 }
             }
 
-            // 加载历史记录（已修复图片显示问题）
-            async function loadHistory() {
+            async function uploadFileInChunks(file, chunkSize) {
+                const totalChunks = Math.ceil(file.size / chunkSize);
+                const fileId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+                for (let i = 0; i < totalChunks; i++) {
+                    const chunk = file.slice(i * chunkSize, (i + 1) * chunkSize);
+                    const chunkForm = new FormData();
+                    chunkForm.append('fileId', fileId);
+                    chunkForm.append('chunk', chunk);
+                    chunkForm.append('index', i);
+                    chunkForm.append('total', totalChunks);
+
+                    await fetch(`${API_BASE}/upload-chunk`, {
+                        method: 'POST',
+                        body: chunkForm
+                    });
+                }
+            }
+
+            async function loadHistory(initialLoad = false) {
+                if (isLoading || !hasMore) return;
+                isLoading = true;
+
                 try {
-                    const response = await fetch(`${API_BASE}/get`, {
+                    if (initialLoad) {
+                        currentPage = 1;
+                        hasMore = true;
+                        document.getElementById('messageList').innerHTML = '<div class="loading">加载中...</div>';
+                    }
+
+                    const response = await fetch(`${API_BASE}/get?page=${currentPage}&limit=${PAGE_SIZE}`, {
                         headers: { "ngrok-skip-browser-warning": "1" }
                     });
-                    const data = await response.json();
                     
-                    const container = document.getElementById('messageList');
-                    container.innerHTML = data.message.map(msg => {
-                        // 兼容处理新旧数据格式
-                        const content = typeof msg === 'string' ? msg : (msg.content || '');
-                        const images = (typeof msg === 'object' && msg.images) ? 
-                        msg.images.map(img => `${API_BASE}${img}`) : [];
-                        
-                        return `
-                            <div class="message-item">
-                                <div class="message-time">
-                                    <svg width="16" height="16" viewBox="0 0 24 24">
-                                        <path fill="#666" d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2m0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8m.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
-                                    </svg>
-                                    ${new Date().toLocaleString()}
-                                </div>
-                                <div class="message-content">${content}</div>
-                                ${images.map(img => `
-                                    <img src="${img}?v=${Date.now()}" 
-                                        class="message-image" 
-                                        alt="上传图片"
-                                        loading="lazy">
-                                `).join('')}
+                    const data = await response.json();
+                    hasMore = data.message.length === PAGE_SIZE;
+
+                    const fragment = document.createDocumentFragment();
+                    data.message.forEach(msg => {
+                        const div = document.createElement('div');
+                        div.className = 'message-item';
+                        div.innerHTML = `
+                            <div class="message-time">
+                                ${new Date(msg.timestamp).toLocaleString()}
                             </div>
+                            <div>${msg.content}</div>
+                            ${msg.images.map(img => `
+                                <img src="${API_BASE}${img}" 
+                                     class="message-image"
+                                     loading="lazy">`).join('')}
                         `;
-                    }).join('');
+                        fragment.appendChild(div);
+                    });
+
+                    const container = document.getElementById('messageList');
+                    if (initialLoad) container.innerHTML = '';
+                    container.appendChild(fragment);
+                    
+                    currentPage++;
                 } catch (error) {
                     console.error('加载失败:', error);
-                    showToast("加载历史记录失败", false);
+                    showToast('加载失败: ' + error.message, false);
+                } finally {
+                    isLoading = false;
                 }
             }
 
-            // 显示提示
-            function showToast(message, isSuccess = false) {
-                const toast = document.createElement("div");
+            function handleScroll() {
+                const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+                if (scrollTop + clientHeight >= scrollHeight - 100) {
+                    loadHistory();
+                }
+            }
+
+            function showToast(message, isSuccess) {
+                const toast = document.createElement('div');
                 toast.className = `toast ${isSuccess ? 'success' : 'error'}`;
                 toast.textContent = message;
                 document.body.appendChild(toast);
                 
-                setTimeout(() => {
-                    toast.remove();
-                }, 3000);
+                setTimeout(() => toast.remove(), 3000);
             }
 
             return {
                 init,
                 sendContent,
-                loadHistory
+                removeImage
             };
         })();
 
+        // 初始化
         document.addEventListener('DOMContentLoaded', () => {
             messageBoard.init();
+            
+            // 图片懒加载
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.message-image').forEach(img => {
+                img.dataset.src = img.src;
+                img.src = '';
+                observer.observe(img);
+            });
         });
     </script>
 </body>
