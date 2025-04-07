@@ -664,7 +664,10 @@
                     }
 
                     const response = await fetch(`${API_BASE}/get?page=${currentPage}&limit=${PAGE_SIZE}`, {
-                        headers: { "ngrok-skip-browser-warning": "1" }
+                        headers: { "ngrok-skip-browser-warning": "1",
+                        "Access-Control-Allow-Origin": "*",
+                        "Content-Security-Policy": "upgrade-insecure-request",
+                    }
                     });
                     
                     const data = await response.json();
