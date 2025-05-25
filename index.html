@@ -215,10 +215,11 @@
             margin: 1rem 0;
         }
 
-        #imagePreview {
+        #imagePreview, #videoPreview {
             display: flex;
             gap: 0.8rem;
             flex-wrap: wrap;
+            margin-top: 0.5rem;
         }
 
         .preview-image {
@@ -231,7 +232,35 @@
             transition: all 0.3s;
         }
 
-        .preview-image:hover {
+        .preview-video {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .preview-video::before {
+            content: "▶";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            background: rgba(0,0,0,0.5);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .preview-image:hover, .preview-video:hover {
             transform: scale(1.05);
             border-color: var(--secondary-color);
         }
@@ -276,7 +305,7 @@
             margin-top: 1rem;
         }
 
-        .message-image {
+        .message-image, .message-video {
             max-width: 100%;
             max-height: 300px;
             border-radius: 8px;
@@ -288,7 +317,13 @@
             transition: opacity 0.3s ease;
         }
 
-        .message-image.loaded {
+        .message-video {
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 16/9;
+        }
+
+        .message-image.loaded, .message-video.loaded {
             opacity: 1;
         }
 
@@ -390,6 +425,12 @@
             opacity: 0.7;
             cursor: not-allowed;
         }
+
+        .upload-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
     </style>
 </head>
 <body>
@@ -479,13 +520,23 @@
                        placeholder="输入您的留言..."
                        id="inputContent">
                 <div class="file-upload">
-                    <input type="file" 
-                           id="imageUpload" 
-                           accept="image/*" 
-                           multiple
-                           style="display: none;">
-                    <label for="imageUpload" class="nav-button">📷 添加图片</label>
+                    <div class="upload-buttons">
+                        <input type="file" 
+                               id="imageUpload" 
+                               accept="image/*" 
+                               multiple
+                               style="display: none;">
+                        <label for="imageUpload" class="nav-button">📷 添加图片</label>
+                        
+                        <input type="file" 
+                               id="videoUpload" 
+                               accept="video/*" 
+                               multiple
+                               style="display: none;">
+                        <label for="videoUpload" class="nav-button">🎥 添加视频</label>
+                    </div>
                     <div id="imagePreview"></div>
+                    <div id="videoPreview"></div>
                 </div>
                 <button class="nav-button send-button" onclick="messageBoard.sendContent()">
                     📤 发送留言
@@ -543,82 +594,116 @@
         });
 
         const messageBoard = (function() {
-            const MAX_FILE_SIZE = 100 * 1024 * 1024;
+            const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+            const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+            const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB
             const API_BASE = 'https://aware-ghost-shortly.ngrok-free.app';
             const PAGE_SIZE = 10;
             const MESSAGE_DELAY = 100; // 消息间隔时间(ms)
             const IMAGE_DELAY = 100;   // 图片间隔时间(ms)
+            const VIDEO_DELAY = 150;   // 视频间隔时间(ms)
             
             let selectedFiles = [];
+            let selectedVideos = [];
             let currentPage = 1;
             let isLoading = false;
             let hasMore = true;
 
             async function init() {
                 document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
+                document.getElementById('videoUpload').addEventListener('change', handleVideoUpload);
                 await loadHistory(true);
                 window.addEventListener('scroll', handleScroll);
             }
 
             async function handleImageUpload(e) {
-                const files = await Promise.all(
-                    Array.from(e.target.files)
-                        .filter(file => file.size <= MAX_FILE_SIZE)
-                        .map(compressImage)
-                );
+                const files = Array.from(e.target.files)
+                    .filter(file => file.size <= MAX_IMAGE_SIZE)
+                    .map(file => {
+                        // 为图片文件添加类型标识
+                        file.isImage = true;
+                        return file;
+                    });
+                
                 selectedFiles.push(...files);
                 updateImagePreview();
+                e.target.value = ''; // 重置input，允许重复选择相同文件
             }
 
-            async function compressImage(file) {
-                if (!file.type.startsWith('image/')) return file;
+            async function handleVideoUpload(e) {
+                const files = Array.from(e.target.files)
+                    .filter(file => file.size <= MAX_VIDEO_SIZE)
+                    .map(file => {
+                        // 为视频文件添加类型标识
+                        file.isVideo = true;
+                        return file;
+                    });
                 
-                return new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        const img = new Image();
-                        img.src = e.target.result;
-                        
-                        img.onload = () => {
-                            const canvas = document.createElement('canvas');
-                            const ctx = canvas.getContext('2d');
-                            let width = img.width;
-                            let height = img.height;
+                selectedVideos.push(...files);
+                updateVideoPreview();
+                e.target.value = ''; // 重置input，允许重复选择相同文件
+            }
 
-                            if (width > 1920 || height > 1080) {
-                                const ratio = Math.min(1920 / width, 1080 / height);
-                                width *= ratio;
-                                height *= ratio;
-                            }
-
-                            canvas.width = width;
-                            canvas.height = height;
-                            ctx.drawImage(img, 0, 0, width, height);
-
-                            canvas.toBlob(blob => {
-                                resolve(new File([blob], file.name, {
-                                    type: 'image/jpeg',
-                                    lastModified: Date.now()
-                                }));
-                            }, 'image/jpeg', 0.7);
-                        };
-                    };
-                    reader.readAsDataURL(file);
-                });
+            function getFileIcon(file) {
+                if (file.type.startsWith('image/')) {
+                    return '🖼️';
+                } else if (file.type.startsWith('video/')) {
+                    return '🎬';
+                }
+                return '📄';
             }
 
             function updateImagePreview() {
                 const preview = document.getElementById('imagePreview');
                 preview.innerHTML = selectedFiles.map((file, index) => `
-                    <img src="${URL.createObjectURL(file)}" 
-                         class="preview-image"
-                         onclick="messageBoard.removeImage(${index})">
+                    <div style="position: relative;">
+                        <img src="${URL.createObjectURL(file)}" 
+                             class="preview-image"
+                             title="${file.name} (${formatFileSize(file.size)})">
+                        <span class="remove-btn" onclick="messageBoard.removeFile(${index}, 'image')" 
+                              style="position: absolute; top: -8px; right: -8px; background: var(--accent-color); 
+                                     color: white; width: 20px; height: 20px; border-radius: 50%; 
+                                     display: flex; align-items: center; justify-content: center; 
+                                     cursor: pointer; font-size: 12px;">×</span>
+                    </div>
                 `).join('');
             }
 
-            function removeImage(index) {
-                selectedFiles.splice(index, 1);
-                updateImagePreview();
+            function updateVideoPreview() {
+                const preview = document.getElementById('videoPreview');
+                preview.innerHTML = selectedVideos.map((file, index) => `
+                    <div style="position: relative;">
+                        <video class="preview-video" muted>
+                            <source src="${URL.createObjectURL(file)}" type="${file.type}">
+                        </video>
+                        <span class="remove-btn" onclick="messageBoard.removeFile(${index}, 'video')" 
+                              style="position: absolute; top: -8px; right: -8px; background: var(--accent-color); 
+                                     color: white; width: 20px; height: 20px; border-radius: 50%; 
+                                     display: flex; align-items: center; justify-content: center; 
+                                     cursor: pointer; font-size: 12px;">×</span>
+                        <div style="font-size: 12px; text-align: center; margin-top: 4px;">
+                            ${formatFileSize(file.size)}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            function removeFile(index, type) {
+                if (type === 'image') {
+                    selectedFiles.splice(index, 1);
+                    updateImagePreview();
+                } else {
+                    selectedVideos.splice(index, 1);
+                    updateVideoPreview();
+                }
             }
 
             async function sendContent() {
@@ -631,11 +716,23 @@
 
                     const formData = new FormData();
                     formData.append('content', input.value.trim());
+                    
+                    // 添加图片文件
                     selectedFiles.forEach(file => formData.append('images', file));
+                    
+                    // 添加视频文件
+                    selectedVideos.forEach(file => formData.append('videos', file));
 
-                    await Promise.all(
-                        selectedFiles.map(file => uploadFileInChunks(file, 1024 * 1024))
-                    );
+                    // 检查是否有内容或文件
+                    if (!input.value.trim() && selectedFiles.length === 0 && selectedVideos.length === 0) {
+                        throw new Error('请输入留言内容或添加文件');
+                    }
+
+                    // 检查总文件大小
+                    const totalSize = [...selectedFiles, ...selectedVideos].reduce((sum, file) => sum + file.size, 0);
+                    if (totalSize > MAX_FILE_SIZE) {
+                        throw new Error(`总文件大小不能超过 ${formatFileSize(MAX_FILE_SIZE)}`);
+                    }
 
                     const response = await fetch(`${API_BASE}/submit`, {
                         method: 'POST',
@@ -643,37 +740,24 @@
                         body: formData
                     });
 
-                    if (response.ok) {
-                        showToast('发送成功!', true);
-                        input.value = '';
-                        selectedFiles = [];
-                        updateImagePreview();
-                        await loadHistory(true);
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || '发送失败');
                     }
+
+                    showToast('发送成功!', true);
+                    input.value = '';
+                    selectedFiles = [];
+                    selectedVideos = [];
+                    updateImagePreview();
+                    updateVideoPreview();
+                    await loadHistory(true);
                 } catch (error) {
                     showToast('发送失败: ' + error.message, false);
+                    console.error('发送错误:', error);
                 } finally {
                     btn.disabled = false;
                     btn.innerHTML = '📤 发送留言';
-                }
-            }
-
-            async function uploadFileInChunks(file, chunkSize) {
-                const totalChunks = Math.ceil(file.size / chunkSize);
-                const fileId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-
-                for (let i = 0; i < totalChunks; i++) {
-                    const chunk = file.slice(i * chunkSize, (i + 1) * chunkSize);
-                    const chunkForm = new FormData();
-                    chunkForm.append('fileId', fileId);
-                    chunkForm.append('chunk', chunk);
-                    chunkForm.append('index', i);
-                    chunkForm.append('total', totalChunks);
-
-                    await fetch(`${API_BASE}/upload-chunk`, {
-                        method: 'POST',
-                        body: chunkForm
-                    });
                 }
             }
 
@@ -692,40 +776,58 @@
                 }
             }
 
-            async function loadHistory(initialLoad = false) {
-                if (isLoading || !hasMore) return;
-                isLoading = true;
-
+            async function loadVideo(url) {
                 try {
-                    if (initialLoad) {
-                        currentPage = 1;
-                        hasMore = true;
-                        document.getElementById('messageList').innerHTML = '<div class="loading">加载中...</div>';
-                    }
-
-                    const response = await fetch(`${API_BASE}/get?page=${currentPage}&limit=${PAGE_SIZE}`, {
-                        headers: { "ngrok-skip-browser-warning": "1" }
+                    const response = await fetch(`${API_BASE}${url}`, {
+                        headers: { 
+                            "ngrok-skip-browser-warning": "1",
+                        }
                     });
-                    
-                    const data = await response.json();
-                    hasMore = data.message.length === PAGE_SIZE;
-
-                    const container = document.getElementById('messageList');
-                    if (initialLoad) container.innerHTML = '';
-
-                    // 逐条加载消息
-                    for (const msg of data.message) {
-                        await addMessageItem(msg, container);
-                        await new Promise(r => setTimeout(r, MESSAGE_DELAY));
-                    }
-
-                    currentPage++;
+                    const blob = await response.blob();
+                    return URL.createObjectURL(blob);
                 } catch (error) {
-                    showToast('加载失败: ' + error.message, false);
-                } finally {
-                    isLoading = false;
+                    console.error('视频加载失败:', error);
+                    return null;
                 }
             }
+
+            async function loadHistory(initialLoad = false) {
+    if (isLoading || !hasMore) return;
+    isLoading = true;
+
+    try {
+        if (initialLoad) {
+            currentPage = 1;
+            hasMore = true;
+            document.getElementById('messageList').innerHTML = '<div class="loading">加载中...</div>';
+        }
+
+        const response = await fetch(`${API_BASE}/get?page=${currentPage}&limit=${PAGE_SIZE}`, {
+            headers: { "ngrok-skip-browser-warning": "1" }
+        });
+        
+        const data = await response.json();
+        
+        // 修改这里 ↓↓↓
+        const messages = data.message.messages || [];
+        hasMore = messages.length === PAGE_SIZE;
+
+        const container = document.getElementById('messageList');
+        if (initialLoad) container.innerHTML = '';
+
+        // 逐条加载消息
+        for (const msg of messages) {
+            await addMessageItem(msg, container);
+            await new Promise(r => setTimeout(r, MESSAGE_DELAY));
+        }
+
+        currentPage++;
+    } catch (error) {
+        showToast('加载失败: ' + error.message, false);
+    } finally {
+        isLoading = false;
+    }
+}
 
             async function addMessageItem(msg, container) {
                 const div = document.createElement('div');
@@ -738,17 +840,24 @@
                     <div class="message-images"></div>
                 `;
 
-                const imagesContainer = div.querySelector('.message-images');
+                const mediaContainer = div.querySelector('.message-images');
                 
                 // 先显示消息容器
                 container.appendChild(div);
                 setTimeout(() => div.classList.add('visible'), 50);
 
-                // 逐张加载图片
-                for (const [index, imgUrl] of msg.images.entries()) {
+                // 加载图片
+                for (const [index, imgUrl] of (msg.images || []).entries()) {
                     await new Promise(r => setTimeout(r, index * IMAGE_DELAY));
                     const img = await createImageElement(imgUrl);
-                    imagesContainer.appendChild(img);
+                    mediaContainer.appendChild(img);
+                }
+
+                // 加载视频
+                for (const [index, videoUrl] of (msg.videos || []).entries()) {
+                    await new Promise(r => setTimeout(r, index * VIDEO_DELAY));
+                    const video = await createVideoElement(videoUrl);
+                    mediaContainer.appendChild(video);
                 }
             }
 
@@ -784,6 +893,53 @@
                 return img;
             }
 
+            async function createVideoElement(url) {
+                const videoContainer = document.createElement('div');
+                videoContainer.style.width = '100%';
+                videoContainer.style.maxWidth = '500px';
+                videoContainer.style.margin = '0.5rem 0';
+                
+                const video = document.createElement('video');
+                video.className = 'message-video';
+                video.controls = true;
+                video.dataset.src = url;
+                video.style.width = '100%';
+                video.style.height = 'auto';
+                
+                const source = document.createElement('source');
+                video.appendChild(source);
+                videoContainer.appendChild(video);
+
+                // 使用IntersectionObserver实现懒加载
+                const observer = new IntersectionObserver(async (entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting) {
+                            observer.unobserve(videoContainer);
+                            try {
+                                const blobUrl = await loadVideo(url);
+                                if (blobUrl) {
+                                    source.src = blobUrl;
+                                    source.type = 'video/mp4'; // 可以根据实际类型调整
+                                    video.load();
+                                    video.classList.add('loaded');
+                                    video.addEventListener('loadeddata', () => {
+                                        URL.revokeObjectURL(blobUrl);
+                                    });
+                                }
+                            } catch (error) {
+                                console.error('视频加载错误:', error);
+                            }
+                        }
+                    }
+                }, {
+                    rootMargin: '200px',
+                    threshold: 0.1
+                });
+
+                observer.observe(videoContainer);
+                return videoContainer;
+            }
+
             function handleScroll() {
                 const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
                 if (scrollTop + clientHeight >= scrollHeight - 100) {
@@ -803,13 +959,15 @@
             return {
                 init,
                 sendContent,
-                removeImage
+                removeFile
             };
+            
         })();
 
         document.addEventListener('DOMContentLoaded', () => {
             messageBoard.init();
         });
+        
     </script>
 </body>
 </html>
