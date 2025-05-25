@@ -250,6 +250,14 @@
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+        }
+
+        .message-item.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .message-time {
@@ -261,31 +269,27 @@
             gap: 0.5rem;
         }
 
+        .message-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
         .message-image {
             max-width: 100%;
             max-height: 300px;
-            margin-top: 1rem;
             border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
             border: 1px solid #eee;
             background: #f5f5f5;
-            min-width: 100px;
             min-height: 100px;
-            position: relative;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        .message-image::after {
-            content: '加载中...';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #666;
-            font-size: 0.8em;
-        }
-
-        .message-image[src]::after {
-            display: none;
+        .message-image.loaded {
+            opacity: 1;
         }
 
         /* 页脚 */
@@ -358,6 +362,7 @@
                 padding: 1.5rem;
             }
         }
+
         .loading {
             text-align: center;
             padding: 1rem;
@@ -538,9 +543,11 @@
         });
 
         const messageBoard = (function() {
-            const MAX_FILE_SIZE = 100 * 1024 * 1024; // 5MB
+            const MAX_FILE_SIZE = 100 * 1024 * 1024;
             const API_BASE = 'https://aware-ghost-shortly.ngrok-free.app';
             const PAGE_SIZE = 10;
+            const MESSAGE_DELAY = 100; // 消息间隔时间(ms)
+            const IMAGE_DELAY = 100;   // 图片间隔时间(ms)
             
             let selectedFiles = [];
             let currentPage = 1;
@@ -578,7 +585,6 @@
                             let width = img.width;
                             let height = img.height;
 
-                            // 限制最大尺寸
                             if (width > 1920 || height > 1080) {
                                 const ratio = Math.min(1920 / width, 1080 / height);
                                 width *= ratio;
@@ -676,15 +682,13 @@
                     const response = await fetch(`${API_BASE}${url}`, {
                         headers: { 
                             "ngrok-skip-browser-warning": "1",
-                            // 如果需要授权可以添加：
-                            // "Authorization": "Bearer your_token"
                         }
                     });
                     const blob = await response.blob();
                     return URL.createObjectURL(blob);
                 } catch (error) {
                     console.error('图片加载失败:', error);
-                    return 'placeholder.jpg'; // 备用图片
+                    return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
                 }
             }
 
@@ -700,54 +704,84 @@
                     }
 
                     const response = await fetch(`${API_BASE}/get?page=${currentPage}&limit=${PAGE_SIZE}`, {
-                        headers: { 
-                            "ngrok-skip-browser-warning": "1",
-                            "Access-Control-Allow-Origin": "*",
-                            "Content-Security-Policy": "upgrade-insecure-request",
-                        }
+                        headers: { "ngrok-skip-browser-warning": "1" }
                     });
                     
                     const data = await response.json();
                     hasMore = data.message.length === PAGE_SIZE;
 
-                    const fragment = document.createDocumentFragment();
-                    for (const msg of data.message) {
-                        const div = document.createElement('div');
-                        div.className = 'message-item';
-                        div.innerHTML = `
-                            <div class="message-time">
-                                ${new Date(msg.timestamp).toLocaleString()}
-                            </div>
-                            <div>${msg.content}</div>
-                            ${msg.images.map(img => `
-                                <img data-src="${img}" 
-                                     class="message-image"
-                                     loading="lazy">`).join('')}
-                        `;
-                        
-                        // 异步加载图片
-                        const images = div.querySelectorAll('.message-image');
-                        for (const img of images) {
-                            const blobUrl = await loadImage(img.dataset.src);
-                            img.src = blobUrl;
-                            // 记得在不需要时撤销Blob URL（例如在移除元素时）
-                            img.addEventListener('load', () => URL.revokeObjectURL(blobUrl));
-                        }
-                        
-                        fragment.appendChild(div);
-                    }
-
                     const container = document.getElementById('messageList');
                     if (initialLoad) container.innerHTML = '';
-                    container.appendChild(fragment);
-                    
+
+                    // 逐条加载消息
+                    for (const msg of data.message) {
+                        await addMessageItem(msg, container);
+                        await new Promise(r => setTimeout(r, MESSAGE_DELAY));
+                    }
+
                     currentPage++;
                 } catch (error) {
-                    console.error('加载失败:', error);
                     showToast('加载失败: ' + error.message, false);
                 } finally {
                     isLoading = false;
                 }
+            }
+
+            async function addMessageItem(msg, container) {
+                const div = document.createElement('div');
+                div.className = 'message-item';
+                div.innerHTML = `
+                    <div class="message-time">
+                        ${new Date(msg.timestamp).toLocaleString()}
+                    </div>
+                    <div>${msg.content}</div>
+                    <div class="message-images"></div>
+                `;
+
+                const imagesContainer = div.querySelector('.message-images');
+                
+                // 先显示消息容器
+                container.appendChild(div);
+                setTimeout(() => div.classList.add('visible'), 50);
+
+                // 逐张加载图片
+                for (const [index, imgUrl] of msg.images.entries()) {
+                    await new Promise(r => setTimeout(r, index * IMAGE_DELAY));
+                    const img = await createImageElement(imgUrl);
+                    imagesContainer.appendChild(img);
+                }
+            }
+
+            async function createImageElement(url) {
+                const img = document.createElement('img');
+                img.className = 'message-image';
+                img.dataset.src = url;
+
+                // 使用IntersectionObserver实现懒加载
+                const observer = new IntersectionObserver(async (entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting) {
+                            observer.unobserve(img);
+                            try {
+                                const blobUrl = await loadImage(url);
+                                img.src = blobUrl;
+                                img.classList.add('loaded');
+                                img.addEventListener('load', () => {
+                                    URL.revokeObjectURL(blobUrl);
+                                });
+                            } catch {
+                                img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+                                img.classList.add('loaded');
+                            }
+                        }
+                    }
+                }, {
+                    rootMargin: '200px',
+                    threshold: 0.1
+                });
+
+                observer.observe(img);
+                return img;
             }
 
             function handleScroll() {
@@ -769,35 +803,12 @@
             return {
                 init,
                 sendContent,
-                removeImage,
-                loadImage
+                removeImage
             };
         })();
 
-        // 初始化
         document.addEventListener('DOMContentLoaded', () => {
             messageBoard.init();
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(async entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        if (!img.src && img.dataset.src) {
-                            const blobUrl = await messageBoard.loadImage(img.dataset.src);
-                            img.src = blobUrl;
-                            // 图片加载完成后释放内存
-                            img.addEventListener('load', () => {
-                                URL.revokeObjectURL(blobUrl);
-                            });
-                        }
-                        observer.unobserve(img);
-                    }
-                });
-            }, { rootMargin: '200px' });
-
-            document.querySelectorAll('.message-image').forEach(img => {
-                observer.observe(img);
-            });
         });
     </script>
 </body>
